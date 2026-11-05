@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="author" content="Namith RN">
+<meta name="description" content="Dreamcart.in — Dream it. Cart it. Live it. Hand-picked goods, honest prices, delivered across India.">
+<title>Dreamcart.in — Dream it. Cart it. Live it.</title>
+<link rel="icon" href="https://files.catbox.moe/a97tb7.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>
+:root{
+  --paper:#FAF6EB; --paper2:#FFFCF2; --ink:#1C1710; --soft:#6B5D4C; --line:#E8DCC2;
+  --yellow:#FFD22E; --yellow2:#F5B700; --tint:#FFF0BF;
+  --orange:#F4581C; --green:#1E9D55; --red:#E23D2E;
+}
+*{ -webkit-tap-highlight-color:transparent; }
+html{ scroll-behavior:smooth; }
+body{ background:var(--paper); color:var(--ink); font-family:'Instrument Sans',sans-serif; overflow-x:hidden; }
+body.lock{ overflow:hidden; }
+.font-disp{ font-family:'Bricolage Grotesque',sans-serif; }
+.mono{ font-family:'IBM Plex Mono',monospace; }
+::selection{ background:var(--yellow); color:var(--ink); }
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{ background:#D8C9A6; border:3px solid var(--paper); border-radius:8px; }
+::-webkit-scrollbar-thumb:hover{ background:var(--ink); }
+:focus-visible{ outline:3px solid var(--yellow2); outline-offset:2px; border-radius:4px; }
+
+/* ---------- ambient layers ---------- */
+.ambient{ position:fixed; inset:0; z-index:-1; pointer-events:none; background:
+  radial-gradient(640px 420px at 88% -60px, rgba(255,210,46,.30), transparent 65%),
+  radial-gradient(520px 400px at -90px 28%, rgba(244,88,28,.07), transparent 60%),
+  radial-gradient(760px 520px at 50% 112%, rgba(255,210,46,.16), transparent 65%); }
+.noise{ position:fixed; inset:0; z-index:300; pointer-events:none; opacity:.045; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.dots{ background-image:radial-gradient(var(--ink) 1.2px, transparent 1.2px); background-size:20px 20px; }
+
+/* ---------- shadows ---------- */
+.shadow-hard{ box-shadow:4px 4px 0 var(--ink); }
+.shadow-hard-lg{ box-shadow:8px 8px 0 var(--ink); }
+.shadow-hard-sm{ box-shadow:2.5px 2.5px 0 var(--ink); }
+.shadow-soft{ box-shadow:0 1px 2px rgba(28,23,16,.05), 0 16px 34px -22px rgba(28,23,16,.30); }
+
+/* ---------- buttons ---------- */
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font-weight:600;
+  border:2px solid var(--ink); border-radius:999px; padding:.68rem 1.4rem; background:var(--paper2); color:var(--ink);
+  box-shadow:3px 3px 0 var(--ink); transition:transform .16s ease, box-shadow .16s ease, background .16s ease; cursor:pointer; white-space:nowrap; }
+.btn:hover{ transform:translate(-1.5px,-1.5px); box-shadow:5px 5px 0 var(--ink); }
+.btn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--ink); }
+.btn-yellow{ background:var(--yellow); }
+.btn-ink{ background:var(--ink); color:var(--paper); }
+.btn-ink:hover{ background:#2c241a; }
+.btn-sm{ padding:.4rem .95rem; font-size:.82rem; box-shadow:2.5px 2.5px 0 var(--ink); }
+.btn[disabled]{ opacity:.45; pointer-events:none; }
+
+/* ---------- inputs ---------- */
+.inp{ width:100%; border:1.5px solid #D9CBA9; border-radius:14px; background:var(--paper2); padding:.68rem .95rem;
+  font:inherit; color:var(--ink); transition:box-shadow .15s ease, border-color .15s ease, transform .15s ease; }
+.inp::placeholder{ color:#a4957f; }
+.inp:focus{ outline:none; border-color:var(--ink); box-shadow:3.5px 3.5px 0 var(--yellow2); transform:translate(-1px,-1px); }
+.lbl{ display:block; font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-bottom:.35rem; font-weight:600; }
+
+/* ---------- chips ---------- */
+.chip{ font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+  border:1.5px solid var(--ink); border-radius:999px; padding:.42rem .95rem; background:var(--paper2); cursor:pointer;
+  transition:all .16s ease; white-space:nowrap; }
+.chip:hover{ transform:translateY(-2px); box-shadow:2.5px 2.5px 0 var(--ink); }
+.chip.on{ background:var(--ink); color:var(--yellow); box-shadow:2.5px 2.5px 0 var(--yellow2); }
+
+/* ---------- sticker / mark ---------- */
+.sticker{ position:absolute; font-family:'IBM Plex Mono',monospace; font-size:.66rem; font-weight:600; letter-spacing:.1em;
+  background:var(--yellow); border:2px solid var(--ink); padding:.22rem .6rem; border-radius:8px; box-shadow:2.5px 2.5px 0 var(--ink);
+  transform:rotate(-6deg); text-transform:uppercase; z-index:5; }
+.mark{ display:inline-block; background:var(--yellow); border:2.5px solid var(--ink); border-radius:14px; padding:0 .16em .05em;
+  transform:rotate(-1.4deg); box-shadow:5px 5px 0 var(--ink); }
+
+/* ---------- ticker + marquees ---------- */
+.marquee{ overflow:hidden; }
+.marquee-track{ display:flex; align-items:center; gap:2rem; width:max-content; animation:marq 26s linear infinite; }
+.marquee:hover .marquee-track{ animation-play-state:paused; }
+@keyframes marq{ to{ transform:translateX(-50%); } }
+.rev-track{ display:flex; width:max-content; animation:marq 46s linear infinite; padding:1rem 0; }
+.rev-track:hover{ animation-play-state:paused; }
+.revcard{ margin:0 .7rem; }
+/* safety net for fractional border utilities */
+.border-1\.5{ border-width:1.5px; }
+.border-r-1\.5{ border-right-width:1.5px; }
+.border-b-1\.5{ border-bottom-width:1.5px; }
+.ol-text{ -webkit-text-stroke:1.6px var(--paper); color:transparent; }
+.ol-ink{ -webkit-text-stroke:2px var(--ink); color:transparent; }
+
+/* ---------- product card ---------- */
+.pcard{ position:relative; border:1.5px solid var(--line); background:var(--paper2); border-radius:22px; overflow:hidden;
+  box-shadow:0 1px 2px rgba(28,23,16,.04), 0 14px 30px -24px rgba(28,23,16,.35);
+  transition:transform .25s cubic-bezier(.2,.9,.3,1.2), box-shadow .25s ease, border-color .25s ease; display:flex; flex-direction:column; }
+.pcard:hover{ transform:translateY(-6px) rotate(-.4deg); border-color:var(--ink); box-shadow:0 2px 0 rgba(28,23,16,.06), 0 26px 44px -24px rgba(28,23,16,.45), 5px 5px 0 var(--ink); }
+.pcard .imgwrap{ position:relative; aspect-ratio:1/1; overflow:hidden; border-bottom:1.5px solid var(--line); background:var(--tint); transition:border-color .25s ease; }
+.pcard:hover .imgwrap{ border-color:var(--ink); }
+.pcard .imgwrap img{ width:100%; height:100%; object-fit:cover; transition:transform .55s cubic-bezier(.2,.8,.2,1); }
+.pcard:hover .imgwrap img{ transform:scale(1.07) rotate(.6deg); }
+.qv{ position:absolute; left:0; right:0; bottom:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; text-align:center; padding:.65rem 0; font-weight:600;
+  transform:translateY(102%); transition:transform .25s ease; cursor:pointer; border:none; width:100%; }
+.pcard:hover .qv{ transform:translateY(0); }
+.qv:hover{ color:var(--yellow); }
+.heart{ position:absolute; top:.6rem; right:.6rem; z-index:6; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--ink);
+  background:rgba(255,252,242,.92); backdrop-filter:blur(4px); display:grid; place-items:center; cursor:pointer; transition:transform .15s ease, background .15s; box-shadow:2px 2px 0 var(--ink); }
+.heart:hover{ transform:scale(1.12) rotate(-8deg); }
+.heart.on{ background:var(--orange); color:var(--paper2); }
+.addbtn{ border:1.5px solid var(--ink); background:var(--yellow); border-radius:999px; font-weight:700; font-size:.8rem; padding:.42rem .9rem;
+  cursor:pointer; box-shadow:2.5px 2.5px 0 var(--ink); transition:all .15s ease; }
+.addbtn:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); background:var(--yellow2); }
+.addbtn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--ink); }
+.addbtn.done{ background:var(--green); color:#fff; }
+.addbtn[disabled]{ opacity:.5; pointer-events:none; }
+.soldout img{ filter:grayscale(.9); opacity:.75; }
+
+/* ---------- reveal ---------- */
+.reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s ease var(--d,0s), transform .7s cubic-bezier(.16,1,.3,1) var(--d,0s); }
+.reveal.in{ opacity:1; transform:none; }
+
+/* ---------- animations ---------- */
+@keyframes spin360{ to{ transform:rotate(360deg); } }
+.spin-slow{ animation:spin360 14s linear infinite; display:inline-block; }
+@keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(2deg);} 50%{ transform:translateY(-12px) rotate(2deg);} }
+.floaty{ animation:floaty 5.5s ease-in-out infinite; }
+@keyframes pop{ 0%{ transform:scale(.4);} 60%{ transform:scale(1.35);} 100%{ transform:scale(1);} }
+.pop{ animation:pop .4s cubic-bezier(.2,.9,.3,1.4); }
+@keyframes shake{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+.shake{ animation:shake .4s ease; }
+@keyframes pulse-dot{ 0%,100%{ box-shadow:0 0 0 0 rgba(245,183,0,.7);} 50%{ box-shadow:0 0 0 7px rgba(245,183,0,0);} }
+
+/* ---------- nav ---------- */
+.nlink{ position:relative; font-weight:600; font-size:.92rem; padding:.2rem 0; }
+.nlink::after{ content:''; position:absolute; left:0; bottom:-2px; height:3px; width:100%; background:var(--yellow2);
+  transform:scaleX(0); transform-origin:left; transition:transform .25s ease; border-radius:2px; }
+.nlink:hover::after{ transform:scaleX(1); }
+.header{ transition:box-shadow .25s ease, background .25s ease; }
+.header.scrolled{ box-shadow:0 10px 30px -18px rgba(28,23,16,.35); background:rgba(250,246,235,.92); backdrop-filter:blur(10px); }
+.badge{ position:absolute; top:-7px; right:-7px; min-width:20px; height:20px; padding:0 4px; border-radius:999px; background:var(--orange);
+  color:#fff; border:2px solid var(--ink); font-family:'IBM Plex Mono',monospace; font-size:.62rem; font-weight:600; display:grid; place-items:center; }
+
+/* ---------- bottom nav (mobile) ---------- */
+#bottomNav{ position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:110;
+  display:grid; grid-template-columns:repeat(5,1fr); align-items:end;
+  background:rgba(255,252,242,.9); backdrop-filter:blur(14px); border:1.5px solid var(--ink); border-radius:26px;
+  padding:.4rem .55rem calc(.35rem + env(safe-area-inset-bottom)); box-shadow:0 22px 44px -20px rgba(28,23,16,.45); }
+.bnav{ display:flex; flex-direction:column; align-items:center; gap:3px; padding:.42rem 0 .28rem; border-radius:16px; border:none; background:none; cursor:pointer;
+  font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--soft); transition:all .2s ease; }
+.bnav.active{ color:var(--ink); background:var(--tint); }
+.bnav-ic{ position:relative; display:grid; place-items:center; }
+.bnav-cart{ color:var(--ink); }
+.bnav-cart .bnav-ic{ width:52px; height:52px; border-radius:50%; background:var(--yellow); border:2px solid var(--ink);
+  box-shadow:3px 3px 0 var(--ink); margin-top:-28px; transition:transform .18s cubic-bezier(.2,.9,.3,1.4); }
+.bnav-cart:active .bnav-ic{ transform:scale(.92); }
+@media(min-width:1024px){ #bottomNav{ display:none; } }
+@media(max-width:1023px){ footer{ margin-bottom:92px; } }
+
+/* ---------- drawer / modals ---------- */
+.drawer{ position:fixed; top:0; right:0; bottom:0; width:min(27rem,100vw); background:var(--paper2); border-left:2px solid var(--ink);
+  z-index:130; transform:translateX(105%); transition:transform .38s cubic-bezier(.2,.9,.25,1); display:flex; flex-direction:column; }
+.drawer.open{ transform:translateX(0); }
+.backdrop{ position:fixed; inset:0; background:rgba(28,23,16,.45); z-index:125; opacity:0; pointer-events:none; transition:opacity .3s ease; backdrop-filter:blur(2px); }
+.backdrop.open{ opacity:1; pointer-events:auto; }
+.modal{ position:fixed; inset:0; z-index:140; display:grid; place-items:center; padding:1rem; visibility:hidden; transition:visibility 0s .32s; }
+.modal.open{ visibility:visible; transition:none; }
+.modal-back{ position:absolute; inset:0; background:rgba(28,23,16,.5); opacity:0; transition:opacity .3s ease; backdrop-filter:blur(3px); }
+.modal.open .modal-back{ opacity:1; }
+.modal-card{ position:relative; background:var(--paper2); border:2px solid var(--ink); border-radius:26px; box-shadow:10px 10px 0 rgba(28,23,16,.9);
+  max-height:92vh; overflow-y:auto; width:100%; transform:scale(.94) translateY(14px); opacity:0; transition:transform .3s cubic-bezier(.2,.9,.3,1.2), opacity .25s ease; }
+.modal.open .modal-card{ transform:none; opacity:1; }
+@media(max-width:640px){
+  .modal{ align-items:end; padding:0; }
+  .modal-card{ border-radius:28px 28px 0 0; border-bottom:none; max-height:94vh; box-shadow:0 -20px 60px rgba(28,23,16,.35); transform:translateY(60px); }
+  .modal.open .modal-card{ transform:none; }
+}
+
+/* ---------- timeline ---------- */
+.tl{ display:flex; }
+.tl-step{ flex:1; position:relative; text-align:center; padding-top:2px; }
+.tl-step::before{ content:''; position:absolute; top:11px; left:calc(-50% + 14px); right:calc(50% + 14px); height:3px; background:rgba(28,23,16,.15); border-radius:2px; }
+.tl-step:first-child::before{ display:none; }
+.tl-step.done::before{ background:var(--green); }
+.tl-dot{ width:22px; height:22px; margin:0 auto; border-radius:50%; border:2px solid var(--ink); background:var(--paper2); position:relative; z-index:2; display:grid; place-items:center; font-size:.6rem; }
+.tl-step.done .tl-dot{ background:var(--green); color:#fff; }
+.tl-step.cur .tl-dot{ background:var(--yellow); animation:pulse-dot 1.6s ease infinite; }
+.tl-dot.tl-cancel{ background:var(--red); color:#fff; }
+
+/* ---------- status chips ---------- */
+.st{ font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
+  border:1.5px solid var(--ink); border-radius:999px; padding:.2rem .6rem; white-space:nowrap; }
+.st-placed{ background:var(--tint); } .st-confirmed{ background:#D9E7FF; } .st-shipped{ background:#FDE0CD; }
+.st-delivered{ background:#D7F2E0; } .st-cancelled{ background:#FBD9D4; }
+
+/* ---------- tables ---------- */
+.atable{ width:100%; border-collapse:collapse; }
+.atable th{ font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--soft);
+  text-align:left; padding:.8rem .9rem; border-bottom:2px solid var(--ink); background:var(--tint); white-space:nowrap; }
+.atable td{ padding:.75rem .9rem; border-bottom:1.5px solid rgba(28,23,16,.12); vertical-align:middle; font-size:.9rem; }
+.atable tbody tr{ transition:background .15s ease; }
+.atable tbody tr:hover{ background:rgba(255,210,46,.14); }
+
+/* ---------- toasts ---------- */
+#toasts{ position:fixed; bottom:calc(96px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%); z-index:400; display:flex; flex-direction:column; gap:.5rem; align-items:center; pointer-events:none; width:max-content; max-width:94vw; }
+@media(min-width:1024px){ #toasts{ bottom:1.4rem; } }
+.toast{ background:var(--ink); color:var(--paper); border:2px solid var(--ink); border-radius:999px; padding:.6rem 1.2rem; font-weight:600; font-size:.84rem;
+  box-shadow:4px 4px 0 rgba(28,23,16,.25); opacity:0; transform:translateY(16px); transition:all .3s cubic-bezier(.2,.9,.3,1.2); max-width:92vw; }
+.toast.on{ opacity:1; transform:translateY(0); }
+.toast .tx{ color:var(--yellow); margin-right:.4rem; }
+.toast.t-green{ background:var(--green); color:#fff; } .toast.t-red{ background:var(--red); color:#fff; }
+
+/* ---------- confetti ---------- */
+#confettiBox{ position:fixed; inset:0; pointer-events:none; z-index:500; overflow:hidden; }
+#confettiBox i{ position:absolute; top:-24px; border:1.5px solid var(--ink); border-radius:2px; animation:cfall linear forwards; }
+@keyframes cfall{ to{ transform:translateY(112vh) rotate(760deg); } }
+
+/* ---------- checkout ---------- */
+.payopt{ border:2px solid var(--ink); border-radius:18px; background:var(--paper2); padding:.9rem .4rem; text-align:center; cursor:pointer; transition:all .16s ease; }
+.payopt:hover{ transform:translateY(-2px); box-shadow:3px 3px 0 var(--ink); }
+.payopt.on{ background:var(--yellow); box-shadow:3.5px 3.5px 0 var(--ink); transform:translate(-1px,-1px); }
+.co-dot{ width:30px; height:30px; border-radius:50%; border:2px solid var(--ink); display:grid; place-items:center; font-family:'IBM Plex Mono',monospace; font-size:.72rem; font-weight:600; background:var(--paper2); transition:all .3s ease; }
+.co-dot.on{ background:var(--yellow); box-shadow:2.5px 2.5px 0 var(--ink); }
+.co-dot.pass{ background:var(--green); color:#fff; }
+@keyframes drawc{ to{ stroke-dashoffset:0; } }
+.draw-circle{ stroke-dasharray:302; stroke-dashoffset:302; animation:drawc .6s ease forwards; }
+.draw-check{ stroke-dasharray:80; stroke-dashoffset:80; animation:drawc .45s ease .5s forwards; }
+.spinner{ width:44px; height:44px; border-radius:50%; border:4px solid rgba(28,23,16,.15); border-top-color:var(--ink); animation:spin360 .8s linear infinite; }
+.gpG{ color:#4285F4; font-weight:800; } .gpo{ color:#EA4335; } .gpp{ color:#FBBC05; } .gpa{ color:#4285F4; } .gpy{ color:#34A853; }
+.cardprev{ background:var(--ink); color:var(--paper); border-radius:18px; padding:1.1rem 1.2rem; border:2px solid var(--ink); box-shadow:5px 5px 0 var(--yellow2); }
+
+/* ---------- ledger rows ---------- */
+.ledger-row{ transition:background .2s ease, padding-left .2s ease; }
+.ledger-row:hover{ background:rgba(255,210,46,.22); padding-left:1.2rem; }
+.ledger-row:hover .larr{ transform:translateX(8px); }
+.larr{ transition:transform .25s ease; }
+
+/* ---------- review cards ---------- */
+.revcard{ width:320px; flex-shrink:0; background:var(--paper2); border:1.5px solid var(--ink); border-radius:18px; padding:1.2rem; box-shadow:4px 4px 0 var(--ink); }
+.revcard:nth-child(odd){ transform:rotate(-1.2deg); } .revcard:nth-child(even){ transform:rotate(1deg); }
+
+/* ---------- account menu ---------- */
+.accmenu{ position:absolute; right:0; top:calc(100% + 10px); width:232px; background:var(--paper2); border:2px solid var(--ink); border-radius:18px;
+  box-shadow:6px 6px 0 var(--ink); z-index:90; opacity:0; transform:translateY(-8px) scale(.97); pointer-events:none; transition:all .2s ease; overflow:hidden; }
+.accmenu.open{ opacity:1; transform:none; pointer-events:auto; }
+
+.seg{ display:inline-flex; border:1.5px solid var(--ink); border-radius:999px; overflow:hidden; background:var(--paper2); }
+.seg button{ padding:.38rem 1rem; font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer; transition:background .15s; }
+.seg button.on{ background:var(--ink); color:var(--yellow); }
+
+.stepper{ display:inline-flex; align-items:center; border:1.5px solid var(--ink); border-radius:999px; background:var(--paper2); overflow:hidden; }
+.stepper button{ width:30px; height:30px; font-weight:800; cursor:pointer; transition:background .12s; }
+.stepper button:hover{ background:var(--yellow); }
+.stepper span{ min-width:34px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:.85rem; font-weight:600; }
+
+.ticket{ position:relative; }
+.ticket::before,.ticket::after{ content:''; position:absolute; width:18px; height:18px; border-radius:50%; background:var(--paper); border:2px solid var(--ink); top:50%; transform:translateY(-50%); }
+.ticket::before{ left:-11px; } .ticket::after{ right:-11px; }
+
+/* ---------- loading screen ---------- */
+#loader{ position:fixed; inset:0; z-index:1000; background:var(--paper); display:grid; place-items:center; transition:transform .8s cubic-bezier(.75,0,.2,1); }
+#loader.done{ transform:translateY(-101%); }
+.loader-badge{ position:relative; width:96px; height:96px; margin:0 auto; display:grid; place-items:center; }
+.loader-badge img{ width:60px; height:60px; object-fit:contain; animation:lpulse 1.6s ease infinite; }
+.loader-ring{ position:absolute; inset:0; border-radius:50%; border:2.5px dashed var(--ink); animation:spin360 7s linear infinite; }
+.loader-ring.r2{ inset:-13px; border:2px solid var(--yellow2); opacity:.55; animation-direction:reverse; animation-duration:11s; }
+@keyframes lpulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.1);} }
+.loader-word{ display:flex; justify-content:center; flex-wrap:wrap; gap:1px; margin-top:30px; font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:clamp(1.5rem,6vw,2.5rem); letter-spacing:.02em; }
+.loader-word span{ display:inline-block; opacity:0; transform:translateY(20px) rotate(8deg); animation:lpop .55s cubic-bezier(.2,.9,.3,1.4) forwards; }
+.loader-word .lin{ color:var(--orange); }
+@keyframes lpop{ to{ opacity:1; transform:none; } }
+.loader-bar{ width:min(260px,72vw); height:9px; border:2px solid var(--ink); border-radius:99px; margin:22px auto 0; background:var(--paper2); overflow:hidden; }
+.loader-bar i{ display:block; height:100%; width:0%; background:var(--yellow); border-right:2px solid var(--ink); transition:width .25s ease; }
+.loader-status{ text-align:center; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.26em; color:var(--soft); }
+
+/* ---------- small screens polish ---------- */
+@media(max-width:640px){
+  .qv{ display:none; }
+  .addbtn{ padding:.34rem .7rem; font-size:.7rem; }
+  .sticker{ font-size:.56rem; padding:.18rem .45rem; }
+  .heart{ width:30px; height:30px; }
+  .pcard{ border-radius:18px; }
+}
+</style>
+<noscript><style>#loader{display:none} body{overflow:auto!important}</style></noscript>
+</head>
+<body>
+
+<!-- ══════════ LOADING SCREEN ══════════ -->
+<div id="loader" aria-hidden="true">
+  <div class="px-6 w-full">
+    <div class="loader-badge">
+      <span class="loader-ring r2"></span>
+      <span class="loader-ring"></span>
+      <img src="https://files.catbox.moe/a97tb7.png" alt="" onerror="imgFall(this)">
+    </div>
+    <p class="loader-word">
+      <span style="animation-delay:.05s">D</span><span style="animation-delay:.1s">R</span><span style="animation-delay:.15s">E</span><span style="animation-delay:.2s">A</span><span style="animation-delay:.25s">M</span><span style="animation-delay:.3s">C</span><span style="animation-delay:.35s">A</span><span style="animation-delay:.4s">R</span><span style="animation-delay:.45s">T</span><span class="lin" style="animation-delay:.55s">.</span><span class="lin" style="animation-delay:.6s">I</span><span class="lin" style="animation-delay:.65s">N</span>
+    </p>
+    <div class="loader-bar"><i id="loaderFill"></i></div>
+    <p class="loader-status" id="loaderMsg">WARMING UP THE SHELVES…</p>
+  </div>
+</div>
+
+<div class="ambient"></div>
+<div class="noise"></div>
+<div id="confettiBox"></div>
+
+<!-- ══════════ ANNOUNCEMENT TICKER ══════════ -->
+<div class="marquee bg-[#1C1710] text-[#FAF6EB]">
+  <div class="marquee-track py-2" style="gap:0">
+    <div class="flex items-center mono text-[10.5px] tracking-[0.18em] font-medium">
+      <span class="px-6">FREE SHIPPING OVER ₹999</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">NEW DROPS EVERY FRIDAY</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">GPAY · UPI · CARDS · COD</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">EASY 7-DAY RETURNS</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">LIVE ORDER TRACKING</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">DESIGNED WITH ♥ IN INDIA</span><span class="text-[#FFD22E]">✳</span>
+    </div>
+    <div class="flex items-center mono text-[10.5px] tracking-[0.18em] font-medium" aria-hidden="true">
+      <span class="px-6">FREE SHIPPING OVER ₹999</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">NEW DROPS EVERY FRIDAY</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">GPAY · UPI · CARDS · COD</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">EASY 7-DAY RETURNS</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">LIVE ORDER TRACKING</span><span class="text-[#FFD22E]">✳</span>
+      <span class="px-6">DESIGNED WITH ♥ IN INDIA</span><span class="text-[#FFD22E]">✳</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ HEADER ══════════ -->
+<header id="header" class="header sticky top-0 z-[100] bg-[#FAF6EB] border-b-2 border-[#1C1710]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[64px] sm:h-[68px] flex items-center justify-between gap-3">
+    <a href="#" id="logoHome" class="flex items-center gap-2.5 group">
+      <img src="https://files.catbox.moe/a97tb7.png" alt="Dreamcart logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain transition-transform group-hover:rotate-[-8deg]" onerror="imgFall(this)">
+      <span class="font-disp font-extrabold text-[1.25rem] sm:text-[1.35rem] tracking-tight leading-none">Dreamcart<span class="text-[#F4581C]">.in</span></span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-7">
+      <a href="#" class="nlink" data-nav="shop">Shop</a>
+      <a href="#" class="nlink" data-nav="sale">Sale</a>
+      <a href="#" class="nlink" data-nav="cats">Categories</a>
+      <a href="#" class="nlink" data-nav="track">Track Order</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-2.5">
+      <button id="btnSearch" class="btn btn-sm !px-3" aria-label="Search">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>
+      </button>
+      <button id="btnWishHead" class="btn btn-sm !px-3 relative hidden sm:inline-flex" aria-label="Wishlist">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 14s-5.5-3.4-5.5-7A3.2 3.2 0 0 1 8 4.6 3.2 3.2 0 0 1 13.5 7c0 3.6-5.5 7-5.5 7z"/></svg>
+        <span id="wishCountH" class="badge hidden">0</span>
+      </button>
+      <button id="btnCart" class="btn btn-yellow btn-sm !px-3.5 relative hidden lg:inline-flex" aria-label="Cart">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 2h2l1.8 8.5a1 1 0 0 0 1 .8h5.6a1 1 0 0 0 1-.75L15 5H4.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="14" r="1.2" fill="currentColor"/><circle cx="12.5" cy="14" r="1.2" fill="currentColor"/></svg>
+        <span>Cart</span>
+        <span id="cartCount" class="badge hidden">0</span>
+      </button>
+      <div id="accWrap" class="relative">
+        <button id="btnAccount" class="btn btn-sm !px-3" aria-label="Account">
+          <span id="accFace"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="8" cy="5.2" r="3"/><path d="M2.5 14.5c.8-3 3-4.3 5.5-4.3s4.7 1.3 5.5 4.3" stroke-linecap="round"/></svg></span>
+        </button>
+        <div id="accountMenu" class="accmenu"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ══════════ SHOP VIEW ══════════ -->
+<section id="view-shop">
+
+  <!-- HERO -->
+  <div class="relative overflow-hidden">
+    <div class="dots absolute -right-16 -top-16 w-[340px] h-[340px] rounded-full opacity-[0.12] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-14 lg:pt-16 lg:pb-24 grid lg:grid-cols-12 gap-12 items-center relative">
+      <div class="lg:col-span-7 relative z-10">
+        <p class="mono text-[10px] sm:text-xs tracking-[0.22em] font-semibold inline-flex items-center gap-2 border-1.5 border-[#1C1710] rounded-full px-4 py-1.5 bg-[#FFFCF2] shadow-hard-sm reveal">
+          <span class="text-[#F4581C]">✳</span> INDIA'S COSIEST LITTLE MARKETPLACE — EST. 2024
+        </p>
+        <h1 class="font-disp font-extrabold tracking-tight leading-[0.95] mt-6 text-[clamp(2.7rem,8vw,5.6rem)] reveal" style="--d:.08s">
+          DREAM IT.<br>
+          <span class="mark">CART IT.</span><br>
+          LIVE IT. <span class="inline-block text-[0.45em] spin-slow align-middle text-[#F4581C]">✳</span>
+        </h1>
+        <p class="mt-6 text-[0.95rem] sm:text-lg text-[#6B5D4C] max-w-xl leading-relaxed reveal" style="--d:.16s">
+          Hand-picked goods at honest prices, at your doorstep in 48 hours. Pay with GPay, cards or good old cash — and watch your parcel travel, step by step.
+        </p>
+
+        <form id="heroForm" class="mt-7 flex items-center gap-1.5 border-2 border-[#1C1710] rounded-full bg-[#FFFCF2] p-1.5 pl-4 sm:pl-5 shadow-hard max-w-xl reveal" style="--d:.24s">
+          <svg class="shrink-0 opacity-60" width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5" stroke-linecap="round"/></svg>
+          <input id="heroSearch" class="flex-1 bg-transparent outline-none px-2 sm:px-3 py-2.5 text-[0.92rem] min-w-0" placeholder="Search 25+ dream goods…" autocomplete="off">
+          <button class="btn btn-yellow btn-sm !rounded-full shrink-0" type="submit">Search</button>
+        </form>
+
+        <div class="mt-5 flex flex-wrap gap-2 reveal" id="heroChips" style="--d:.32s"></div>
+
+        <div class="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 mono text-[10px] sm:text-xs tracking-[0.14em] font-semibold reveal" style="--d:.4s">
+          <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#1E9D55] border border-[#1C1710] inline-block"></span>FREE SHIPPING OVER ₹999</span>
+          <span class="flex items-center gap-2"><span class="text-[#F4581C]">★</span>LIVE ORDER TRACKING</span>
+          <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#FFD22E] border border-[#1C1710] inline-block"></span>48-HOUR DELIVERY</span>
+        </div>
+      </div>
+
+      <!-- hero collage -->
+      <div class="lg:col-span-5 relative reveal mt-4 lg:mt-0" style="--d:.2s">
+        <div class="absolute -top-8 -right-2 w-36 h-36 sm:w-52 sm:h-52 border-2 border-[#1C1710] rounded-[24px] overflow-hidden rotate-[7deg] shadow-hard bg-[#FFF0BF] z-0 hidden sm:block">
+          <img src="https://images.pexels.com/photos/8038326/pexels-photo-8038326.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Studio headphones" class="w-full h-full object-cover" loading="lazy" onerror="imgFall(this)">
+        </div>
+        <div class="relative z-10 border-2 border-[#1C1710] rounded-[28px] overflow-hidden rotate-[1.5deg] shadow-hard-lg bg-[#FFF0BF] max-w-md mx-auto lg:mx-0 lg:ml-auto transition-transform duration-500 hover:rotate-0">
+          <img src="https://images.pexels.com/photos/35618110/pexels-photo-35618110.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Velocity Runners on yellow backdrop" class="w-full aspect-[4/4.6] object-cover" onerror="imgFall(this)">
+          <span class="sticker top-4 left-4">New drop ✳ 2026</span>
+          <div class="absolute bottom-4 left-4 ticket bg-[#FFFCF2] border-2 border-[#1C1710] rounded-xl px-4 py-2 shadow-hard-sm">
+            <span class="font-disp font-extrabold text-xl">₹3,299</span>
+            <s class="mono text-xs opacity-50 ml-1.5">₹5,999</s>
+          </div>
+        </div>
+        <div class="absolute -bottom-8 -left-2 sm:left-2 w-[96px] h-[96px] sm:w-[124px] sm:h-[124px] z-20 floaty">
+          <svg viewBox="0 0 120 120" class="w-full h-full spin-slow">
+            <defs><path id="circPath" d="M60,60 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0"/></defs>
+            <circle cx="60" cy="60" r="57" fill="#FFD22E" stroke="#1C1710" stroke-width="2.5"/>
+            <text font-size="11" font-family="IBM Plex Mono, monospace" letter-spacing="2" fill="#1C1710" font-weight="600">
+              <textPath href="#circPath">FREE SHIPPING OVER ₹999 ✳ DREAMCART.IN ✳</textPath>
+            </text>
+            <text x="60" y="70" text-anchor="middle" font-size="30" fill="#F4581C">✳</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY MARQUEE (dynamic) -->
+  <div class="marquee bg-[#1C1710] border-y-2 border-[#1C1710] py-4">
+    <div class="marquee-track font-disp font-extrabold text-2xl sm:text-4xl tracking-tight whitespace-nowrap" id="catMarquee" style="animation-duration:30s;gap:0"></div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section id="prodSec" class="max-w-7xl mx-auto px-4 sm:px-6 py-14 lg:py-20">
+    <div class="flex flex-wrap items-end justify-between gap-4 reveal">
+      <div>
+        <p class="mono text-xs tracking-[0.2em] font-semibold text-[#F4581C]">✳ THE SHELVES</p>
+        <h2 class="font-disp font-extrabold text-3xl sm:text-5xl tracking-tight mt-2">Fresh Drops</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="gridCount" class="mono text-[11px] tracking-wide text-[#6B5D4C]"></span>
+        <select id="sortSel" class="inp !w-auto !py-2 !rounded-full mono text-xs tracking-wide cursor-pointer">
+          <option value="feat">Sort: Featured</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="off">Biggest Discount</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="chipsWrap" class="flex gap-2.5 mt-6 overflow-x-auto pb-2 reveal" style="--d:.1s"></div>
+    <div id="grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-5 mt-7"></div>
+    <div id="gridEmpty" class="hidden border-2 border-dashed border-[#1C1710] rounded-[24px] py-16 text-center mt-8">
+      <p class="text-5xl font-disp font-extrabold">✳</p>
+      <p class="font-disp font-bold text-2xl mt-3">Nothing here… yet.</p>
+      <p class="text-[#6B5D4C] mt-1 text-sm sm:text-base">Try another word, or clear the filters below.</p>
+      <button class="btn btn-yellow mt-5" id="btnClearFilters">Clear filters</button>
+    </div>
+  </section>
+
+  <!-- SALE BANNER -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-14">
+    <div class="relative overflow-hidden border-2 border-[#1C1710] rounded-[30px] bg-[#FFD22E] px-6 py-11 sm:px-12 sm:py-16 shadow-hard-lg reveal">
+      <span class="absolute -right-8 -bottom-14 text-[200px] leading-none font-disp font-extrabold opacity-[0.16] spin-slow select-none">✳</span>
+      <span class="sticker !rotate-[4deg] !bg-[#FFFCF2] top-5 right-5 sm:right-12 !text-xs">Up to 60% off</span>
+      <p class="mono text-[10px] sm:text-xs tracking-[0.24em] font-semibold">LIMITED PERIOD ✳ WHILE STOCK LASTS</p>
+      <h2 class="font-disp font-extrabold tracking-tight leading-[0.95] text-[clamp(2.4rem,7vw,5rem)] mt-3">
+        THE DREAM<br><span class="ol-ink">SALE IS LIVE.</span>
+      </h2>
+      <p class="mt-4 max-w-md font-medium text-[#4a3d2c] text-sm sm:text-base">Sneakers, shades, cameras and more — prices slashed, quality untouched. Blink and it's gone.</p>
+      <button class="btn btn-ink mt-6" id="btnSaleCta">Shop the sale <span aria-hidden="true">↓</span></button>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS — LEDGER -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+    <div class="reveal">
+      <p class="mono text-xs tracking-[0.2em] font-semibold text-[#F4581C]">✳ NO FUSS, JUST FLOW</p>
+      <h2 class="font-disp font-extrabold text-3xl sm:text-5xl tracking-tight mt-2 mb-7">How Dreamcart works</h2>
+    </div>
+    <div class="border-t-2 border-[#1C1710] reveal" style="--d:.1s">
+      <div class="ledger-row grid grid-cols-[auto_1fr] sm:grid-cols-[90px_1fr_auto] items-center gap-4 sm:gap-8 border-b-2 border-[#1C1710] py-6 sm:py-7">
+        <span class="mono text-sm font-semibold text-[#F4581C]">01</span>
+        <div>
+          <h3 class="font-disp font-bold text-lg sm:text-2xl">Fill your cart with dreams</h3>
+          <p class="text-[#6B5D4C] mt-1 max-w-lg text-sm sm:text-base">Browse the shelves, tap the heart on anything you love, and toss it in the cart. No minimums, no pressure.</p>
+        </div>
+        <span class="larr hidden sm:block text-2xl font-disp font-extrabold">→</span>
+      </div>
+      <div class="ledger-row grid grid-cols-[auto_1fr] sm:grid-cols-[90px_1fr_auto] items-center gap-4 sm:gap-8 border-b-2 border-[#1C1710] py-6 sm:py-7">
+        <span class="mono text-sm font-semibold text-[#F4581C]">02</span>
+        <div>
+          <h3 class="font-disp font-bold text-lg sm:text-2xl">Pay your way</h3>
+          <p class="text-[#6B5D4C] mt-1 max-w-lg text-sm sm:text-base">One-tap GPay, any card, or cash when it arrives. Every rupee secured, every receipt instant.</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="chip !cursor-default"><span class="gpG">G</span> Pay</span>
+            <span class="chip !cursor-default">UPI</span>
+            <span class="chip !cursor-default">Cards</span>
+            <span class="chip !cursor-default">COD</span>
+          </div>
+        </div>
+        <span class="larr hidden sm:block text-2xl font-disp font-extrabold">→</span>
+      </div>
+      <div class="ledger-row grid grid-cols-[auto_1fr] sm:grid-cols-[90px_1fr_auto] items-center gap-4 sm:gap-8 border-b-2 border-[#1C1710] py-6 sm:py-7">
+        <span class="mono text-sm font-semibold text-[#F4581C]">03</span>
+        <div>
+          <h3 class="font-disp font-bold text-lg sm:text-2xl">Track it to your doorstep</h3>
+          <p class="text-[#6B5D4C] mt-1 max-w-lg text-sm sm:text-base">Placed → confirmed → shipped → delivered. Watch every hop live from your orders page, any time.</p>
+        </div>
+        <span class="larr hidden sm:block text-2xl font-disp font-extrabold">✳</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS MARQUEE -->
+  <section class="border-y-2 border-[#1C1710] bg-[#FFFCF2] py-9 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-3 reveal">
+      <p class="mono text-xs tracking-[0.2em] font-semibold text-[#F4581C]">✳ WORD ON THE STREET</p>
+      <h2 class="font-disp font-extrabold text-3xl sm:text-5xl tracking-tight mt-2">Dreamers speak</h2>
+    </div>
+    <div class="marquee">
+      <div class="rev-track px-6">
+        <div class="revcard"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"Ordered at midnight, delivered before my chai got cold. Absolutely unreal."</p><p class="mono text-xs mt-3 font-semibold">PRIYA · BENGALURU</p></div>
+        <div class="revcard"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"The packaging alone deserves an award. The products are even better."</p><p class="mono text-xs mt-3 font-semibold">ROHAN · MUMBAI</p></div>
+        <div class="revcard"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"GPay checkout took eight seconds. EIGHT. I timed it."</p><p class="mono text-xs mt-3 font-semibold">SNEHA · HYDERABAD</p></div>
+        <div class="revcard"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"Tracked my parcel from warehouse to doorstep. Oddly satisfying."</p><p class="mono text-xs mt-3 font-semibold">ARJUN · PUNE</p></div>
+        <div class="revcard"><p class="text-[#F4581C] tracking-widest text-sm">★★★★☆</p><p class="mt-2 font-medium leading-snug text-sm">"Quality that feels three times the price. I'm ruined for other stores now."</p><p class="mono text-xs mt-3 font-semibold">KAVYA · KOCHI</p></div>
+        <div class="revcard"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"Support replied in two minutes. On a Sunday. Who ARE these people?"</p><p class="mono text-xs mt-3 font-semibold">DEV · DELHI</p></div>
+        <div class="revcard" aria-hidden="true"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"Ordered at midnight, delivered before my chai got cold. Absolutely unreal."</p><p class="mono text-xs mt-3 font-semibold">PRIYA · BENGALURU</p></div>
+        <div class="revcard" aria-hidden="true"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"The packaging alone deserves an award. The products are even better."</p><p class="mono text-xs mt-3 font-semibold">ROHAN · MUMBAI</p></div>
+        <div class="revcard" aria-hidden="true"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"GPay checkout took eight seconds. EIGHT. I timed it."</p><p class="mono text-xs mt-3 font-semibold">SNEHA · HYDERABAD</p></div>
+        <div class="revcard" aria-hidden="true"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"Tracked my parcel from warehouse to doorstep. Oddly satisfying."</p><p class="mono text-xs mt-3 font-semibold">ARJUN · PUNE</p></div>
+        <div class="revcard" aria-hidden="true"><p class="text-[#F4581C] tracking-widest text-sm">★★★★☆</p><p class="mt-2 font-medium leading-snug text-sm">"Quality that feels three times the price. I'm ruined for other stores now."</p><p class="mono text-xs mt-3 font-semibold">KAVYA · KOCHI</p></div>
+        <div class="revcard" aria-hidden="true"><p class="text-[#F4581C] tracking-widest text-sm">★★★★★</p><p class="mt-2 font-medium leading-snug text-sm">"Support replied in two minutes. On a Sunday. Who ARE these people?"</p><p class="mono text-xs mt-3 font-semibold">DEV · DELHI</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+    <div class="border-2 border-[#1C1710] rounded-[30px] bg-[#1C1710] text-[#FAF6EB] px-6 py-10 sm:px-12 sm:py-14 relative overflow-hidden shadow-hard-lg reveal">
+      <span class="absolute right-8 -top-6 text-[#FFD22E] text-8xl opacity-30 rotate-12 select-none">✳</span>
+      <div class="grid lg:grid-cols-2 gap-8 items-center relative">
+        <div>
+          <h2 class="font-disp font-extrabold text-3xl sm:text-5xl tracking-tight leading-tight">JOIN THE<br><span class="text-[#FFD22E]">DREAM LIST.</span></h2>
+          <p class="mono text-[10px] sm:text-xs tracking-[0.18em] mt-4 opacity-70">1 EMAIL / WEEK · NO SPAM · ONLY DROPS & DEALS</p>
+        </div>
+        <form id="nlForm" class="flex flex-col sm:flex-row items-stretch gap-3">
+          <input id="nlInput" type="email" required placeholder="you@example.com" class="inp !bg-[#FAF6EB] flex-1">
+          <button class="btn btn-yellow shrink-0" type="submit">Count me in ✳</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ══════════ ORDERS VIEW ══════════ -->
+<section id="view-orders" class="hidden max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-14 min-h-[70vh]">
+  <p class="mono text-xs tracking-[0.2em] font-semibold text-[#F4581C]">✳ LIVE TRACKING</p>
+  <h1 class="font-disp font-extrabold text-3xl sm:text-5xl tracking-tight mt-2" id="ordersGreet">Your Orders</h1>
+  <p class="text-[#6B5D4C] mt-2 text-sm sm:text-base">Every hop, from our shelf to your hands.</p>
+  <div id="ordersWrap" class="mt-8 flex flex-col gap-6"></div>
+  <div id="ordersAuth" class="hidden border-2 border-dashed border-[#1C1710] rounded-[24px] py-14 text-center mt-8">
+    <p class="text-5xl font-disp font-extrabold">✳</p>
+    <p class="font-disp font-bold text-2xl mt-3">Your orders live behind a login.</p>
+    <p class="text-[#6B5D4C] mt-1 text-sm sm:text-base">Sign in to track parcels, revisit purchases and cancel with one tap.</p>
+    <button class="btn btn-yellow mt-6" id="btnOrdersLogin">Login / Sign up</button>
+  </div>
+</section>
+
+<!-- ══════════ ADMIN VIEW ══════════ -->
+<section id="view-admin" class="hidden min-h-[80vh]">
+  <div class="bg-[#FFD22E] border-b-2 border-[#1C1710]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <img src="https://files.catbox.moe/a97tb7.png" alt="" class="h-8 w-8 object-contain" onerror="imgFall(this)">
+        <span class="font-disp font-extrabold text-lg sm:text-xl tracking-tight">Dreamcart <span class="mono text-[10px] font-semibold border-1.5 border-[#1C1710] rounded-full px-2 py-0.5 bg-[#1C1710] text-[#FFD22E] align-middle">ADMIN CONSOLE</span></span>
+      </div>
+      <div class="flex gap-2.5">
+        <button class="btn btn-sm" id="btnAdminShop">← View shop</button>
+        <button class="btn btn-ink btn-sm" id="btnAdminLogout">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-7">
+    <div class="flex flex-wrap gap-2.5" id="admTabs">
+      <button class="chip on" data-admtab="overview">Overview</button>
+      <button class="chip" data-admtab="products">Products</button>
+      <button class="chip" data-admtab="orders">Orders</button>
+      <button class="chip" data-admtab="customers">Customers</button>
+    </div>
+
+    <div id="adm-overview" class="mt-6">
+      <div class="border-2 border-[#1C1710] rounded-[22px] bg-[#FFFCF2] overflow-hidden grid grid-cols-2 md:grid-cols-5 divide-x-2 divide-y-2 md:divide-y-0 divide-[#1C1710] shadow-hard">
+        <div class="p-4 sm:p-5"><p class="mono text-[9px] sm:text-[10px] tracking-[0.16em] text-[#6B5D4C] font-semibold">REVENUE</p><p class="font-disp font-extrabold text-xl sm:text-3xl mt-1" id="stRevenue">₹0</p></div>
+        <div class="p-4 sm:p-5"><p class="mono text-[9px] sm:text-[10px] tracking-[0.16em] text-[#6B5D4C] font-semibold">ORDERS</p><p class="font-disp font-extrabold text-xl sm:text-3xl mt-1" id="stOrders">0</p></div>
+        <div class="p-4 sm:p-5"><p class="mono text-[9px] sm:text-[10px] tracking-[0.16em] text-[#6B5D4C] font-semibold">NEEDS ACTION</p><p class="font-disp font-extrabold text-xl sm:text-3xl mt-1 text-[#F4581C]" id="stPending">0</p></div>
+        <div class="p-4 sm:p-5"><p class="mono text-[9px] sm:text-[10px] tracking-[0.16em] text-[#6B5D4C] font-semibold">PRODUCTS</p><p class="font-disp font-extrabold text-xl sm:text-3xl mt-1" id="stProducts">0</p></div>
+        <div class="p-4 sm:p-5"><p class="mono text-[9px] sm:text-[10px] tracking-[0.16em] text-[#6B5D4C] font-semibold">CUSTOMERS</p><p class="font-disp font-extrabold text-xl sm:text-3xl mt-1" id="stCustomers">0</p></div>
+      </div>
+      <div class="grid lg:grid-cols-5 gap-6 mt-6">
+        <div class="lg:col-span-3 border-2 border-[#1C1710] rounded-[22px] bg-[#FFFCF2] overflow-hidden shadow-hard">
+          <p class="font-disp font-bold text-lg px-5 py-3.5 border-b-2 border-[#1C1710] bg-[#FFF0BF]">Recent orders</p>
+          <div class="overflow-x-auto"><table class="atable"><tbody id="admRecent"></tbody></table></div>
+        </div>
+        <div class="lg:col-span-2 border-2 border-[#1C1710] rounded-[22px] bg-[#FFFCF2] overflow-hidden shadow-hard">
+          <p class="font-disp font-bold text-lg px-5 py-3.5 border-b-2 border-[#1C1710] bg-[#FFF0BF]">Low stock watch</p>
+          <div id="admLow" class="p-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="adm-products" class="mt-6 hidden">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <h2 class="font-disp font-extrabold text-2xl">Catalogue <span class="mono text-sm text-[#6B5D4C] font-medium" id="prodTotal"></span></h2>
+        <button class="btn btn-yellow btn-sm" id="btnAddProd">+ Add product</button>
+      </div>
+      <div class="border-2 border-[#1C1710] rounded-[22px] bg-[#FFFCF2] overflow-x-auto shadow-hard">
+        <table class="atable"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Tag</th><th class="text-right">Actions</th></tr></thead><tbody id="prodTable"></tbody></table>
+      </div>
+    </div>
+
+    <div id="adm-orders" class="mt-6 hidden">
+      <div class="flex items-center justify-between gap-3 mb-4 flex-wrap">
+        <h2 class="font-disp font-extrabold text-2xl">Order desk</h2>
+        <p class="mono text-[10px] tracking-wide text-[#6B5D4C]">CONFIRM / SHIP / DELIVER / CANCEL — TAP A ROW FOR FULL TRACKING</p>
+      </div>
+      <div class="border-2 border-[#1C1710] rounded-[22px] bg-[#FFFCF2] overflow-x-auto shadow-hard">
+        <table class="atable"><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th class="text-right">Actions</th></tr></thead><tbody id="orderTable"></tbody></table>
+      </div>
+    </div>
+
+    <div id="adm-customers" class="mt-6 hidden">
+      <h2 class="font-disp font-extrabold text-2xl mb-4">Customers</h2>
+      <div class="border-2 border-[#1C1710] rounded-[22px] bg-[#FFFCF2] overflow-x-auto shadow-hard">
+        <table class="atable"><thead><tr><th>Name</th><th>Contact</th><th>Joined</th><th>Orders</th><th>Lifetime spend</th></tr></thead><tbody id="custTable"></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="border-t-2 border-[#1C1710] bg-[#FFFCF2] mt-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-12">
+    <div class="md:col-span-5">
+      <a href="#" class="flex items-center gap-2.5" data-nav="shop">
+        <img src="https://files.catbox.moe/a97tb7.png" alt="Dreamcart logo" class="h-10 w-10 object-contain" onerror="imgFall(this)">
+        <span class="font-disp font-extrabold text-2xl tracking-tight">Dreamcart<span class="text-[#F4581C]">.in</span></span>
+      </a>
+      <p class="text-[#6B5D4C] mt-4 max-w-sm leading-relaxed text-sm sm:text-base">A tiny store with big dreams — honest prices, fast delivery and tracking on every single parcel, pan-India.</p>
+      <div class="flex flex-wrap gap-2 mt-5">
+        <span class="chip !cursor-default"><span class="gpG">G</span> Pay</span>
+        <span class="chip !cursor-default">UPI</span>
+        <span class="chip !cursor-default">VISA</span>
+        <span class="chip !cursor-default">Mastercard</span>
+        <span class="chip !cursor-default">RuPay</span>
+        <span class="chip !cursor-default">COD</span>
+      </div>
+    </div>
+    <div class="md:col-span-2">
+      <p class="mono text-[11px] tracking-[0.2em] font-semibold mb-4">SHOP</p>
+      <ul class="space-y-2.5 font-medium text-sm sm:text-base" id="footCats">
+        <li><a href="#" class="nlink" data-nav="shop">All products</a></li>
+        <li><a href="#" class="nlink" data-nav="sale">Sale</a></li>
+      </ul>
+    </div>
+    <div class="md:col-span-2">
+      <p class="mono text-[11px] tracking-[0.2em] font-semibold mb-4">HELP</p>
+      <ul class="space-y-2.5 font-medium text-sm sm:text-base">
+        <li><a href="#" class="nlink" data-nav="track">Track order</a></li>
+        <li><a href="#" class="nlink" data-fake="Returns are free for 7 days — no questions asked ✳">Returns</a></li>
+        <li><a href="#" class="nlink" data-fake="Shipping is free above ₹999, else a flat ₹79 ✳">Shipping</a></li>
+        <li><a href="#" class="nlink" data-fake="Write to hello@dreamcart.in — we reply fast ✳">Contact</a></li>
+      </ul>
+    </div>
+    <div class="md:col-span-3">
+      <p class="mono text-[11px] tracking-[0.2em] font-semibold mb-4">SAY HELLO</p>
+      <p class="font-medium text-sm sm:text-base">hello@dreamcart.in</p>
+      <p class="font-medium mt-1 text-sm sm:text-base">+91 98765 43210</p>
+      <p class="text-[#6B5D4C] text-sm mt-3">Bengaluru, Karnataka, India</p>
+    </div>
+  </div>
+  <div class="border-t-2 border-[#1C1710]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+      <p class="mono text-[10px] tracking-wide text-[#6B5D4C]">© <span id="yr"></span> DREAMCART.IN · ALL RIGHTS RESERVED</p>
+      <p class="mono text-[10px] tracking-wide">Designed & developed by <span class="font-semibold bg-[#FFD22E] border-[1.5px] border-[#1C1710] rounded-full px-2.5 py-0.5 shadow-hard-sm">Namith RN</span></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════ BOTTOM NAV (mobile) ══════════ -->
+<nav id="bottomNav" aria-label="Primary">
+  <button class="bnav active" data-bnav="home">
+    <span class="bnav-ic"><svg width="19" height="19" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M2.5 7.5 8 3l5.5 4.5V13a1 1 0 0 1-1 1H9.5v-3.5h-3V14H3.5a1 1 0 0 1-1-1z"/></svg></span>
+    <span>Home</span>
+  </button>
+  <button class="bnav" data-bnav="drops">
+    <span class="bnav-ic"><svg width="19" height="19" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.2 9.7 6.3 14.8 8l-5.1 1.7L8 14.8 6.3 9.7 1.2 8l5.1-1.7z"/></svg></span>
+    <span>Drops</span>
+  </button>
+  <button class="bnav bnav-cart" data-bnav="cart" aria-label="Cart">
+    <span class="bnav-ic">
+      <svg width="21" height="21" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 2h2l1.8 8.5a1 1 0 0 0 1 .8h5.6a1 1 0 0 0 1-.75L15 5H4.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="14" r="1.2" fill="currentColor"/><circle cx="12.5" cy="14" r="1.2" fill="currentColor"/></svg>
+      <span id="cartCountB" class="badge hidden" style="top:-6px;right:-8px">0</span>
+    </span>
+    <span>Cart</span>
+  </button>
+  <button class="bnav" data-bnav="orders">
+    <span class="bnav-ic"><svg width="19" height="19" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2.5 5.5 8 3l5.5 2.5v5L8 13l-5.5-2.5z"/><path d="M2.5 5.5 8 8l5.5-2.5M8 8v5"/></svg></span>
+    <span>Orders</span>
+  </button>
+  <button class="bnav" data-bnav="profile">
+    <span class="bnav-ic"><svg width="19" height="19" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="5.2" r="3"/><path d="M2.5 14.5c.8-3 3-4.3 5.5-4.3s4.7 1.3 5.5 4.3" stroke-linecap="round"/></svg></span>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- ══════════ CART DRAWER ══════════ -->
+<div id="backdrop" class="backdrop"></div>
+<aside id="drawer" class="drawer" aria-label="Shopping cart">
+  <div class="flex items-center justify-between px-5 py-4 border-b-2 border-[#1C1710] bg-[#FFF0BF]">
+    <p class="font-disp font-extrabold text-xl">Your Cart <span class="text-[#F4581C]">✳</span></p>
+    <button id="drawerClose" class="btn btn-sm !px-3" aria-label="Close cart">✕</button>
+  </div>
+  <div id="drawerItems" class="flex-1 overflow-y-auto px-4 sm:px-5 py-4 flex flex-col gap-3.5"></div>
+  <div class="border-t-2 border-[#1C1710] px-5 py-4 bg-[#FFFCF2]">
+    <div class="mb-3">
+      <div class="flex justify-between mono text-[9.5px] tracking-[0.12em] font-semibold text-[#6B5D4C] mb-1.5">
+        <span id="shipMsg">FREE SHIPPING UNLOCKED ✳</span><span>₹999</span>
+      </div>
+      <div class="h-3 border-1.5 border-[#1C1710] rounded-full bg-[#FAF6EB] overflow-hidden">
+        <div id="shipBar" class="h-full bg-[#FFD22E] border-r-2 border-[#1C1710] transition-all duration-500" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="flex justify-between text-sm font-medium"><span class="text-[#6B5D4C]">Subtotal</span><span id="cartSub" class="mono">₹0</span></div>
+    <div class="flex justify-between text-sm font-medium mt-1"><span class="text-[#6B5D4C]">Shipping</span><span id="cartShip" class="mono">₹0</span></div>
+    <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-dashed border-[#1C1710]">
+      <span class="font-disp font-bold text-lg">Total</span><span id="cartTotal" class="font-disp font-extrabold text-2xl">₹0</span>
+    </div>
+    <button id="btnCheckout" class="btn btn-yellow w-full mt-4">Checkout securely →</button>
+  </div>
+</aside>
+
+<!-- ══════════ AUTH MODAL ══════════ -->
+<div id="authModal" class="modal">
+  <div class="modal-back" data-close></div>
+  <div class="modal-card max-w-md p-6 sm:p-8">
+    <button class="btn btn-sm !px-3 absolute top-4 right-4" data-close aria-label="Close">✕</button>
+    <div class="text-center">
+      <img src="https://files.catbox.moe/a97tb7.png" alt="" class="h-12 w-12 object-contain mx-auto" onerror="imgFall(this)">
+      <h3 class="font-disp font-extrabold text-2xl sm:text-3xl tracking-tight mt-3" id="authTitle">Welcome back</h3>
+      <p class="text-[#6B5D4C] text-sm mt-1" id="authSub">Login to track orders and check out faster.</p>
+    </div>
+    <div class="flex border-2 border-[#1C1710] rounded-full overflow-hidden mt-6">
+      <button id="tabLogin" class="flex-1 py-2.5 font-semibold text-sm transition-colors" type="button">Login</button>
+      <button id="tabSignup" class="flex-1 py-2.5 font-semibold text-sm transition-colors" type="button">Create account</button>
+    </div>
+    <div class="flex items-center justify-center gap-3 mt-4">
+      <span class="mono text-[9px] tracking-[0.16em] text-[#6B5D4C] font-semibold">USE</span>
+      <div class="seg" id="authSeg">
+        <button type="button" class="on" data-seg="email">Email</button>
+        <button type="button" data-seg="phone">Phone</button>
+      </div>
+    </div>
+    <form id="authForm" class="mt-5 flex flex-col gap-4">
+      <div id="authNameRow" class="hidden">
+        <label class="lbl" for="authName">Full name</label>
+        <input id="authName" class="inp" placeholder="Priya Sharma" autocomplete="name">
+      </div>
+      <div>
+        <label class="lbl" id="authContactLabel" for="authContact">Email address</label>
+        <input id="authContact" class="inp" placeholder="you@example.com" autocomplete="username">
+      </div>
+      <div>
+        <label class="lbl" for="authPass">Password</label>
+        <input id="authPass" type="password" class="inp" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <p id="authErr" class="hidden text-sm font-semibold text-[#E23D2E] bg-[#FBD9D4] border-2 border-[#E23D2E] rounded-xl px-3 py-2"></p>
+      <button class="btn btn-ink w-full" id="authSubmit" type="submit">Login →</button>
+    </form>
+    <p class="mono text-[9px] tracking-wide text-center text-[#6B5D4C] mt-4">YOUR ACCOUNT LIVES ONLY IN THIS BROWSER ✳</p>
+  </div>
+</div>
+
+<!-- ══════════ PRODUCT QUICK-VIEW MODAL ══════════ -->
+<div id="pmModal" class="modal">
+  <div class="modal-back" data-close></div>
+  <div class="modal-card max-w-3xl">
+    <button class="btn btn-sm !px-3 absolute top-4 right-4 z-10" data-close aria-label="Close">✕</button>
+    <div class="grid md:grid-cols-2">
+      <div class="relative border-b-2 md:border-b-0 md:border-r-2 border-[#1C1710] bg-[#FFF0BF]">
+        <img id="pmImg" src="" alt="" class="w-full h-60 sm:h-72 md:h-full object-cover" onerror="imgFall(this)">
+        <span id="pmTag" class="sticker top-4 left-4 hidden">TAG</span>
+      </div>
+      <div class="p-5 sm:p-8">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span id="pmCat" class="chip !cursor-default">CAT</span>
+          <span class="mono text-xs font-semibold text-[#F4581C]" id="pmRate">★ 4.8</span>
+        </div>
+        <h3 id="pmName" class="font-disp font-extrabold text-2xl sm:text-3xl tracking-tight mt-3 leading-tight">Product</h3>
+        <div class="flex items-end gap-2.5 mt-3 flex-wrap">
+          <span id="pmPrice" class="font-disp font-extrabold text-3xl">₹0</span>
+          <s id="pmMrp" class="mono text-sm opacity-50">₹0</s>
+          <span id="pmOff" class="sticker !static !rotate-0 !text-[10px] !bg-[#F4581C] !text-white">-0%</span>
+        </div>
+        <p id="pmDesc" class="text-[#6B5D4C] leading-relaxed mt-4 text-[0.92rem]">Description</p>
+        <p id="pmStock" class="mono text-[10px] tracking-[0.14em] font-semibold mt-4 text-[#1E9D55]">● IN STOCK</p>
+        <div class="flex flex-wrap items-center gap-3 mt-5">
+          <div class="stepper"><button id="pmMinus" type="button" aria-label="Less">−</button><span id="pmQty">1</span><button id="pmPlus" type="button" aria-label="More">+</button></div>
+          <button id="pmAdd" class="btn btn-yellow flex-1 min-w-[120px]">Add to cart</button>
+        </div>
+        <button id="pmBuy" class="btn btn-ink w-full mt-3">Buy now — skip the cart →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CHECKOUT MODAL ══════════ -->
+<div id="coModal" class="modal">
+  <div class="modal-back" data-close></div>
+  <div class="modal-card max-w-xl p-5 sm:p-8 relative">
+    <button class="btn btn-sm !px-3 absolute top-4 right-4 z-10" data-close aria-label="Close">✕</button>
+    <h3 class="font-disp font-extrabold text-2xl sm:text-3xl tracking-tight">Checkout <span class="text-[#F4581C]">✳</span></h3>
+
+    <div class="flex items-center gap-2 mt-5">
+      <span class="co-dot on" id="coDot1">1</span><span class="mono text-[9px] tracking-widest font-semibold hidden sm:inline">ADDRESS</span>
+      <span class="flex-1 h-[3px] bg-[#1C1710]/15 rounded mx-1" id="coLine1"></span>
+      <span class="co-dot" id="coDot2">2</span><span class="mono text-[9px] tracking-widest font-semibold hidden sm:inline">PAYMENT</span>
+      <span class="flex-1 h-[3px] bg-[#1C1710]/15 rounded mx-1" id="coLine2"></span>
+      <span class="co-dot" id="coDot3">3</span><span class="mono text-[9px] tracking-widest font-semibold hidden sm:inline">DONE</span>
+    </div>
+
+    <!-- step 1 -->
+    <form id="coAddrForm" class="mt-6">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="lbl" for="coName">Full name</label><input id="coName" class="inp" placeholder="Priya Sharma" autocomplete="name"></div>
+        <div>
+          <label class="lbl" for="coPhone">Phone</label>
+          <input id="coPhone" class="inp" placeholder="10-digit mobile" inputmode="numeric" autocomplete="tel">
+          <p id="coPhoneNote" class="hidden mono text-[8.5px] tracking-[0.14em] text-[#1E9D55] font-semibold mt-1.5">✳ AUTO-FILLED FROM YOUR ACCOUNT</p>
+        </div>
+        <div class="sm:col-span-2"><label class="lbl" for="coLine">Address</label><input id="coLine" class="inp" placeholder="Flat, street, landmark…" autocomplete="street-address"></div>
+        <div><label class="lbl" for="coCity">City</label><input id="coCity" class="inp" placeholder="Bengaluru"></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="lbl" for="coState">State</label><input id="coState" class="inp" placeholder="Karnataka"></div>
+          <div><label class="lbl" for="coPin">PIN</label><input id="coPin" class="inp" placeholder="560001" inputmode="numeric" maxlength="6"></div>
+        </div>
+      </div>
+      <button class="btn btn-yellow w-full mt-6" type="submit">Continue to payment →</button>
+      <p class="mono text-[9px] tracking-wide text-center text-[#6B5D4C] mt-3">DEMO CHECKOUT — NOTHING IS ACTUALLY SHIPPED (OR CHARGED) ✳</p>
+    </form>
+
+    <!-- step 2 -->
+    <div id="coPayStep" class="mt-6 hidden">
+      <div class="flex items-center justify-between border-1.5 border-[#1C1710] rounded-2xl bg-[#FFF0BF] px-4 py-3">
+        <span class="mono text-xs font-semibold" id="coSumLine">0 items</span>
+        <span class="font-disp font-extrabold text-xl" id="coPayTotal">₹0</span>
+      </div>
+      <div class="grid grid-cols-3 gap-2.5 sm:gap-3 mt-5" id="payOpts">
+        <button type="button" class="payopt on" data-pay="gpay"><span class="text-base sm:text-lg font-extrabold"><span class="gpG">G</span> <span class="gpo">P</span><span class="gpp">a</span><span class="gpG">y</span></span><span class="block mono text-[8px] sm:text-[9px] tracking-[0.14em] mt-1 font-semibold">UPI / GPAY</span></button>
+        <button type="button" class="payopt" data-pay="card"><span class="text-base sm:text-lg font-extrabold">💳</span><span class="block mono text-[8px] sm:text-[9px] tracking-[0.14em] mt-1 font-semibold">CARD</span></button>
+        <button type="button" class="payopt" data-pay="cod"><span class="text-base sm:text-lg font-extrabold">₹</span><span class="block mono text-[8px] sm:text-[9px] tracking-[0.14em] mt-1 font-semibold">CASH ON DEL.</span></button>
+      </div>
+
+      <div id="panelGpay" class="mt-5">
+        <label class="lbl" for="coUpi">Your UPI ID</label>
+        <input id="coUpi" class="inp mono" placeholder="yourname@okbank" value="dreamer@okhdfc">
+        <button class="btn btn-ink w-full mt-4" id="btnGpay" type="button">Pay with GPay</button>
+      </div>
+
+      <div id="panelCard" class="mt-5 hidden">
+        <div class="cardprev">
+          <div class="flex justify-between items-center">
+            <span class="w-10 h-7 rounded-md bg-[#FFD22E] border-2 border-[#FAF6EB]/40 inline-block"></span>
+            <span class="mono text-xs tracking-widest opacity-70">DREAMCARD</span>
+          </div>
+          <p class="mono text-lg sm:text-xl tracking-[0.18em] mt-4" id="cpNum">•••• •••• •••• ••••</p>
+          <div class="flex justify-between mt-4 mono text-xs tracking-widest">
+            <span id="cpName">YOUR NAME</span><span id="cpExp">MM/YY</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mt-4">
+          <div class="col-span-2"><label class="lbl" for="cardNum">Card number</label><input id="cardNum" class="inp mono" placeholder="4242 4242 4242 4242" inputmode="numeric" maxlength="19"></div>
+          <div class="col-span-2"><label class="lbl" for="cardName">Name on card</label><input id="cardName" class="inp" placeholder="PRIYA SHARMA"></div>
+          <div><label class="lbl" for="cardExp">Expiry</label><input id="cardExp" class="inp mono" placeholder="MM/YY" maxlength="5"></div>
+          <div><label class="lbl" for="cardCvv">CVV</label><input id="cardCvv" class="inp mono" placeholder="•••" type="password" maxlength="4" inputmode="numeric"></div>
+        </div>
+        <button class="btn btn-ink w-full mt-4" id="btnCardPay" type="button">Pay with card</button>
+      </div>
+
+      <div id="panelCod" class="mt-5 hidden">
+        <p class="text-[#6B5D4C] text-sm leading-relaxed border-2 border-dashed border-[#1C1710] rounded-2xl px-4 py-3.5">Keep exact change handy — our delivery partner collects at your door. Zero advance. Pure trust. ✳</p>
+        <button class="btn btn-ink w-full mt-4" id="btnCod" type="button">Place COD order</button>
+      </div>
+
+      <button class="mono text-[11px] tracking-wide font-semibold underline underline-offset-4 mt-4" id="coBackAddr" type="button">← Edit address</button>
+    </div>
+
+    <!-- step 3 -->
+    <div id="coDoneStep" class="mt-6 hidden text-center py-4">
+      <svg width="92" height="92" viewBox="0 0 100 100" class="mx-auto">
+        <circle cx="50" cy="50" r="48" fill="#D7F2E0" stroke="#1C1710" stroke-width="2.5"/>
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#1E9D55" stroke-width="2.5" class="draw-circle" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="302"/>
+        <path d="M30 52 L45 66 L72 36" fill="none" stroke="#1E9D55" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" class="draw-check"/>
+      </svg>
+      <h4 class="font-disp font-extrabold text-3xl tracking-tight mt-4">Order placed!</h4>
+      <p class="mono text-sm font-semibold mt-2.5">ORDER ID: <span class="bg-[#FFD22E] border-2 border-[#1C1710] rounded-lg px-2 py-0.5" id="doneOrderId">DC-XXXXXX</span></p>
+      <p class="text-[#6B5D4C] mt-3 text-sm">Sit back — track every step from your orders page. Estimated delivery in <b>2–4 days</b>.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+        <button class="btn btn-yellow" id="btnTrack">Track order →</button>
+        <button class="btn" id="btnCont">Keep shopping</button>
+      </div>
+    </div>
+
+    <!-- processing overlay -->
+    <div id="coProc" class="hidden absolute inset-0 bg-[#FFFCF2]/95 rounded-[24px] z-20 flex-col items-center justify-center text-center px-6" style="display:none">
+      <div class="spinner"></div>
+      <p class="mono text-sm font-semibold tracking-[0.14em] mt-5" id="coProcLabel">PROCESSING…</p>
+      <p class="text-[#6B5D4C] text-xs mt-1.5">Demo payment — no real money moves ✳</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PRODUCT FORM MODAL (ADMIN) ══════════ -->
+<div id="prodFormModal" class="modal">
+  <div class="modal-back" data-close></div>
+  <div class="modal-card max-w-2xl p-5 sm:p-8">
+    <button class="btn btn-sm !px-3 absolute top-4 right-4" data-close aria-label="Close">✕</button>
+    <h3 class="font-disp font-extrabold text-2xl sm:text-3xl tracking-tight" id="pfTitle">Add product ✳</h3>
+    <form id="prodForm" class="mt-6 grid sm:grid-cols-2 gap-4">
+      <input type="hidden" id="pfId">
+      <div class="sm:col-span-2"><label class="lbl" for="pfName">Product name</label><input id="pfName" class="inp" placeholder="Aurora ANC Headphones" required></div>
+      <div><label class="lbl" for="pfCat">Category</label><input id="pfCat" class="inp" list="catList" placeholder="Audio"><datalist id="catList"></datalist></div>
+      <div><label class="lbl" for="pfTag">Tag</label>
+        <select id="pfTag" class="inp cursor-pointer"><option value="">None</option><option>NEW</option><option>SALE</option><option>BESTSELLER</option><option>TRENDING</option></select>
+      </div>
+      <div><label class="lbl" for="pfPrice">Price (₹)</label><input id="pfPrice" type="number" min="1" class="inp" placeholder="4999" required></div>
+      <div><label class="lbl" for="pfMrp">MRP (₹)</label><input id="pfMrp" type="number" min="1" class="inp" placeholder="7999"></div>
+      <div><label class="lbl" for="pfStock">Stock</label><input id="pfStock" type="number" min="0" class="inp" placeholder="25" value="20"></div>
+      <div><label class="lbl" for="pfRating">Rating (0–5)</label><input id="pfRating" type="number" min="0" max="5" step="0.1" class="inp" placeholder="4.6" value="4.5"></div>
+      <div class="sm:col-span-2"><label class="lbl" for="pfDesc">Description</label><textarea id="pfDesc" class="inp" rows="2" placeholder="One line that sells it…"></textarea></div>
+      <div><label class="lbl" for="pfImg">Image URL</label><input id="pfImg" class="inp mono text-xs" placeholder="https://…"></div>
+      <div><p class="lbl">Preview</p><img id="pfPrev" src="" alt="preview" class="w-full h-[74px] object-cover border-1.5 border-[#1C1710] rounded-xl bg-[#FFF0BF]" onerror="imgFall(this)"></div>
+      <button class="btn btn-yellow sm:col-span-2 mt-1" type="submit">Save product ✳</button>
+    </form>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+'use strict';
+/* ═══════════════ HELPERS ═══════════════ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>'₹'+Number(n||0).toLocaleString('en-IN');
+const FALL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Crect width='600' height='600' fill='%23FFD22E'/%3E%3Ctext x='50%25' y='56%25' font-size='200' text-anchor='middle' fill='%231C1710' font-family='sans-serif'%3E%E2%9C%B3%3C/text%3E%3C/svg%3E";
+function imgFall(el){ el.onerror=null; el.src=FALL; }
+const timeStr=t=>new Date(t).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+const dateStr=t=>new Date(t).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+const ordId=()=>'DC-'+Math.random().toString(36).slice(2,8).toUpperCase();
+const LS={ get(k,f){ try{ const v=JSON.parse(localStorage.getItem(k)); return v===undefined||v===null?f:v; }catch(e){ return f; } }, set(k,v){ localStorage.setItem(k,JSON.stringify(v)); } };
+
+/* ═══════════════ LOADING SCREEN ═══════════════ */
+(function(){
+  const loader=$('#loader'); if(!loader) return;
+  document.body.classList.add('lock');
+  const fill=$('#loaderFill'), msg=$('#loaderMsg');
+  const msgs=['WARMING UP THE SHELVES…','POLISHING THE PRICE TAGS…','COUNTING THE DREAM GOODS…','ALMOST THERE…'];
+  let p=0, mi=0;
+  const iv=setInterval(()=>{ mi=(mi+1)%msgs.length; msg.textContent=msgs[mi]; },700);
+  const tick=setInterval(()=>{ p=Math.min(92,p+Math.random()*13+5); fill.style.width=p+'%'; },130);
+  const started=Date.now();
+  function finish(){
+    if(loader.dataset.done) return; loader.dataset.done='1';
+    clearInterval(iv); clearInterval(tick); fill.style.width='100%';
+    setTimeout(()=>{ loader.classList.add('done'); document.body.classList.remove('lock'); setTimeout(()=>loader.remove(),900); },380);
+  }
+  window.addEventListener('load',()=>{ setTimeout(finish, Math.max(0,1500-(Date.now()-started))); });
+  setTimeout(finish,4500);
+})();
+
+/* ═══════════════ CATALOGUE (seed inventory) ═══════════════ */
+const SEED_V=6;
+const SEED=[
+ {id:'p1', name:'Aurora ANC Headphones', cat:'Audio', price:4999, mrp:7999, stock:24, tag:'BESTSELLER', rating:4.8, reviews:2314, img:'https://images.pexels.com/photos/7772548/pexels-photo-7772548.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Feather-light over-ears with 42-hour battery, plush memory cushions and noise cancellation that turns commutes into concerts.'},
+ {id:'p2', name:'Cloud Studio Headphones', cat:'Audio', price:6499, mrp:8999, stock:12, tag:'NEW', rating:4.7, reviews:861, img:'https://images.pexels.com/photos/8038326/pexels-photo-8038326.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Studio-tuned drivers in a pearl-silver shell. Foldable, travel-ready and dangerously good-looking on video calls.'},
+ {id:'p3', name:'Velocity Runners', cat:'Footwear', price:3299, mrp:5999, stock:30, tag:'SALE', rating:4.6, reviews:1876, img:'https://images.pexels.com/photos/35618110/pexels-photo-35618110.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Cloud-foam midsole, breathable knit upper, grip for days. Your 6 a.m. runs just got a personality upgrade.'},
+ {id:'p4', name:'Court Classics 92', cat:'Footwear', price:2799, mrp:4499, stock:18, tag:'', rating:4.5, reviews:1204, img:'https://images.pexels.com/photos/11324548/pexels-photo-11324548.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'The timeless white court silhouette, rebuilt with vegan leather and a cushioned collar. Goes with literally everything.'},
+ {id:'p5', name:'Solstice Leather Watch', cat:'Accessories', price:5499, mrp:8999, stock:9, tag:'BESTSELLER', rating:4.9, reviews:642, img:'https://images.pexels.com/photos/28157826/pexels-photo-28157826.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'A golden-hour dial on hand-stitched tan leather. Japanese movement, 5 ATM, and compliments on loop.'},
+ {id:'p6', name:'Regal Heritage Watch', cat:'Accessories', price:7999, mrp:11999, stock:6, tag:'', rating:4.8, reviews:318, img:'https://images.pexels.com/photos/7664537/pexels-photo-7664537.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Two-tone heritage piece with a champagne face. The watch you wear when the meeting actually matters.'},
+ {id:'p7', name:'Eclipse Day Shades', cat:'Accessories', price:1899, mrp:2999, stock:40, tag:'NEW', rating:4.4, reviews:977, img:'https://images.pexels.com/photos/27353350/pexels-photo-27353350.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Featherweight frames with UV400 lenses and a matte finish. Made for long walks and longer stares.'},
+ {id:'p8', name:'Coast Polarized Shades', cat:'Accessories', price:2299, mrp:3499, stock:22, tag:'', rating:4.6, reviews:534, img:'https://images.pexels.com/photos/29274467/pexels-photo-29274467.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Polarized, splash-proof, picnic-approved. Cuts glare off water, glass and that one shiny colleague.'},
+ {id:'p9', name:'Nomad Trail Backpack', cat:'Bags', price:2799, mrp:4299, stock:15, tag:'', rating:4.7, reviews:1450, img:'https://images.pexels.com/photos/8266907/pexels-photo-8266907.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'28L of waxed-canvas ruggedness with leather straps and a laptop hammock. Weekend-trip certified.'},
+ {id:'p10', name:'Metro Roll-Top Pack', cat:'Bags', price:2499, mrp:3799, stock:20, tag:'SALE', rating:4.5, reviews:723, img:'https://images.pexels.com/photos/18510449/pexels-photo-18510449.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Water-repellent roll-top in deep forest green. Quick-stash pockets, padded back, zero regrets.'},
+ {id:'p11', name:'Terra Mug Duo', cat:'Home', price:999, mrp:1499, stock:50, tag:'', rating:4.6, reviews:2108, img:'https://images.pexels.com/photos/6312177/pexels-photo-6312177.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Two hand-glazed stoneware mugs, 320 ml each. Keeps chai honest and Monday mornings survivable.'},
+ {id:'p12', name:'Lumen 35mm Camera', cat:'Tech', price:12999, mrp:16999, stock:5, tag:'TRENDING', rating:4.9, reviews:289, img:'https://images.pexels.com/photos/7727517/pexels-photo-7727517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'A lovingly restored classic with a tack-sharp 50mm prime. Shoot film like it is 1977 — grain included.'},
+ {id:'p13', name:'Halo Task Lamp', cat:'Home', price:1599, mrp:2499, stock:26, tag:'', rating:4.5, reviews:668, img:'https://images.pexels.com/photos/28461156/pexels-photo-28461156.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'A sunshine-yellow desk lamp with three warmth modes. Instant cosy, zero assembly tantrums.'},
+ {id:'p14', name:'Pulse Smart Band', cat:'Tech', price:2499, mrp:3999, stock:33, tag:'SALE', rating:4.3, reviews:1543, img:'https://images.pexels.com/photos/37735302/pexels-photo-37735302.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Heart-rate, SpO2, sleep and 14-day battery on a vivid AMOLED strip. Your wrist, but wiser.'},
+ {id:'p15', name:'Hydra Steel Flask', cat:'Lifestyle', price:1299, mrp:1999, stock:44, tag:'NEW', rating:4.7, reviews:1932, img:'https://images.pexels.com/photos/7815024/pexels-photo-7815024.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Double-walled, 24-hour cold, 12-hour hot. The 750 ml tank that survives every backpack.'},
+ {id:'p16', name:'Buds Air Mini', cat:'Audio', price:1999, mrp:3499, stock:38, tag:'SALE', rating:4.4, reviews:3121, img:'https://images.pexels.com/photos/8858287/pexels-photo-8858287.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Pocket-sized true-wireless buds with punchy bass, tap controls and 28 hours total playtime in the case.'},
+ {id:'p17', name:'Boom Brick Speaker', cat:'Audio', price:2899, mrp:4599, stock:17, tag:'NEW', rating:4.6, reviews:745, img:'https://images.pexels.com/photos/12021852/pexels-photo-12021852.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'A punchy, splash-proof brick of sound with 16 hours of playtime. Rooftop evenings, sorted.'},
+ {id:'p18', name:'Keys Mech 75', cat:'Tech', price:5499, mrp:7999, stock:11, tag:'TRENDING', rating:4.8, reviews:412, img:'https://images.pexels.com/photos/5380584/pexels-photo-5380584.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Hot-swappable 75% mechanical keyboard with creamy thocky switches and south-facing RGB. Typing, but make it jazz.'},
+ {id:'p19', name:'Vault Leather Wallet', cat:'Accessories', price:1499, mrp:2499, stock:29, tag:'', rating:4.5, reviews:988, img:'https://images.pexels.com/photos/28028234/pexels-photo-28028234.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Full-grain tan leather, RFID-shielded, slim enough for a front pocket. Ages beautifully, like you.'},
+ {id:'p20', name:'Noir Eau de Parfum', cat:'Beauty', price:2299, mrp:3999, stock:21, tag:'NEW', rating:4.7, reviews:356, img:'https://images.pexels.com/photos/27357173/pexels-photo-27357173.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Amber, cedar and a whisper of smoke. Fifty millilitres of main-character energy.'},
+ {id:'p21', name:'Terra Planter Duo', cat:'Home', price:1199, mrp:1799, stock:34, tag:'', rating:4.6, reviews:623, img:'https://images.pexels.com/photos/18294113/pexels-photo-18294113.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Two matte ceramic planters with drainage and saucers. Your succulents deserve better than a coffee tin.'},
+ {id:'p22', name:'Orbit Trucker Cap', cat:'Accessories', price:899, mrp:1499, stock:46, tag:'', rating:4.3, reviews:1287, img:'https://images.pexels.com/photos/26956139/pexels-photo-26956139.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Retro mesh-back cap with an embroidered mission patch. Bad-hair-day insurance, one size fits all.'},
+ {id:'p23', name:'Jot Hardcover Notebook', cat:'Stationery', price:699, mrp:999, stock:58, tag:'BESTSELLER', rating:4.8, reviews:2740, img:'https://images.pexels.com/photos/12914430/pexels-photo-12914430.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'160 pages of buttery 100-gsm paper, lay-flat binding, ribbon marker. Ideas go in, plans come out.'},
+ {id:'p24', name:'Ember Soy Candle', cat:'Home', price:849, mrp:1299, stock:39, tag:'BESTSELLER', rating:4.7, reviews:1654, img:'https://images.pexels.com/photos/7004671/pexels-photo-7004671.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Amber jar, soy wax, 40-hour burn of lavender and warm vanilla. Sunday evenings in candle form.'},
+ {id:'p25', name:'Trail Tumbler 1L', cat:'Lifestyle', price:1599, mrp:2499, stock:27, tag:'', rating:4.6, reviews:834, img:'https://images.pexels.com/photos/14473909/pexels-photo-14473909.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', desc:'Insulated 1-litre tumbler — ice-cold for 24 hours, piping hot for 12. Campsite to cubicle.'}
+];
+
+/* ═══════════════ STATE (real localStorage data only) ═══════════════ */
+const fresh=LS.get('dc_seed_v',0)!==SEED_V;
+if(fresh){ /* version upgrade: clear previously bundled demo data, keep catalogue current */
+  localStorage.removeItem('dc_users'); localStorage.removeItem('dc_orders');
+}
+let products=LS.get('dc_products',null);
+if(!products||fresh){ products=SEED.slice(); LS.set('dc_products',products); LS.set('dc_seed_v',SEED_V); }
+let users=LS.get('dc_users',[]);
+let orders=LS.get('dc_orders',[]);
+let session=LS.get('dc_session',null);
+let cart=LS.get('dc_cart',[]);
+let wish=LS.get('dc_wish',[]);
+const save=()=>{ LS.set('dc_products',products); LS.set('dc_users',users); LS.set('dc_orders',orders); LS.set('dc_session',session); LS.set('dc_cart',cart); LS.set('dc_wish',wish); };
+
+const ADMIN={ email:'admin@dream.com', pass:'dreamcartadmin67', name:'Store Admin' };
+const LABEL={ placed:'Placed', confirmed:'Confirmed', shipped:'Shipped', delivered:'Delivered', cancelled:'Cancelled' };
+const PAYLABEL={ gpay:'GPay / UPI', card:'Card', cod:'COD' };
+const NEXT={ placed:'confirmed', confirmed:'shipped', shipped:'delivered' };
+const NEXTBTN={ placed:'Confirm order', confirmed:'Mark shipped', shipped:'Mark delivered' };
+const FREE_SHIP=999, SHIP_FEE=79;
+
+let curCat='all', query='', sort='feat', pendingAction=null, pmId=null, pmQtyV=1, coItems=null, coMethod='gpay', coTotal=0;
+
+/* ═══════════════ TOASTS + CONFETTI ═══════════════ */
+function toast(msg,type){ const t=document.createElement('div'); t.className='toast'+(type?' t-'+type:''); t.innerHTML='<span class="tx">✳</span>'+esc(msg); $('#toasts').appendChild(t); requestAnimationFrame(()=>t.classList.add('on')); setTimeout(()=>{ t.classList.remove('on'); setTimeout(()=>t.remove(),320); },2700); }
+function confetti(){ const box=$('#confettiBox'), colors=['#FFD22E','#F4581C','#1E9D55','#1C1710','#FFFCF2']; for(let i=0;i<52;i++){ const s=document.createElement('i'); s.style.cssText='left:'+(Math.random()*100)+'%;background:'+colors[i%5]+';width:'+(6+Math.random()*7)+'px;height:'+(10+Math.random()*9)+'px;animation-delay:'+(Math.random()*.45)+'s;animation-duration:'+(1.7+Math.random()*1.3)+'s;'; box.appendChild(s); setTimeout(()=>s.remove(),3400); } }
+function popBadge(el){ if(!el) return; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+
+/* ═══════════════ REVEALS ═══════════════ */
+const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } }),{threshold:.12});
+function bindReveals(){ $$('.reveal:not(.in)').forEach(el=>io.observe(el)); }
+
+/* ═══════════════ BOTTOM NAV ═══════════════ */
+function setBnav(k){ $$('#bottomNav [data-bnav]').forEach(b=>b.classList.toggle('active',b.dataset.bnav===k)); }
+$$('#bottomNav [data-bnav]').forEach(b=>b.addEventListener('click',()=>{
+  const k=b.dataset.bnav;
+  if(k==='home'){ showView('shop'); }
+  else if(k==='drops'){ showView('shop'); setTimeout(()=>$('#prodSec').scrollIntoView({behavior:'smooth'}),90); }
+  else if(k==='cart'){ openDrawer(); }
+  else if(k==='orders'){ if(session) showView('orders'); else { pendingAction=()=>showView('orders'); openAuth(); } }
+  else if(k==='profile'){ renderAccount(); $('#accountMenu').classList.toggle('open'); }
+  if(k!=='cart'&&k!=='profile') setBnav(k);
+}));
+
+/* ═══════════════ VIEWS ═══════════════ */
+function showView(v){
+ if(v==='admin' && !(session && session.isAdmin)){ v='shop'; }
+ ['shop','orders','admin'].forEach(x=>$('#view-'+x).classList.toggle('hidden',x!==v));
+ if(v==='orders'){ renderOrders(); setBnav('orders'); }
+ else if(v==='admin'){ renderAdmin(); setBnav(''); }
+ else setBnav('home');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+window.goShop=function(){ showView('shop'); };
+
+/* ═══════════════ SHOP RENDER ═══════════════ */
+function cats(){ return [...new Set(products.map(p=>p.cat))]; }
+function renderCatMarquee(){
+ const cs=cats();
+ const half=cs.map(c=>'<span class="mx-5 sm:mx-8 text-[#FAF6EB]">'+esc(c.toUpperCase())+'</span><span class="mx-5 sm:mx-8 text-[#FFD22E]">✳</span>').join('');
+ $('#catMarquee').innerHTML=half+half;
+}
+function renderChips(){
+ const list=[['all','All'],['sale','On Sale'],['wish','♥ Saved'],...cats().map(c=>[c,c])];
+ $('#chipsWrap').innerHTML=list.map(([v,l])=>'<button class="chip'+(curCat===v?' on':'')+'" data-chip="'+esc(v)+'">'+esc(l)+'</button>').join('');
+ $('#heroChips').innerHTML=cats().slice(0,6).map(c=>'<button class="chip" data-chip="'+esc(c)+'">'+esc(c)+'</button>').join('');
+ $('#footCats').innerHTML='<li><a href="#" class="nlink" data-nav="shop">All products</a></li><li><a href="#" class="nlink" data-nav="sale">Sale</a></li>'+cats().map(c=>'<li><a href="#" class="nlink" data-chip="'+esc(c)+'">'+esc(c)+'</a></li>').join('');
+ $('#catList').innerHTML=cats().map(c=>'<option value="'+esc(c)+'">').join('');
+ renderCatMarquee();
+}
+function filtered(){
+ let list=products.slice();
+ if(curCat==='sale') list=list.filter(p=>p.mrp>p.price);
+ else if(curCat==='wish') list=list.filter(p=>wish.includes(p.id));
+ else if(curCat!=='all') list=list.filter(p=>p.cat===curCat);
+ if(query){ const q=query.toLowerCase(); list=list.filter(p=>(p.name+' '+p.cat).toLowerCase().includes(q)); }
+ if(sort==='price-asc') list.sort((a,b)=>a.price-b.price);
+ else if(sort==='price-desc') list.sort((a,b)=>b.price-a.price);
+ else if(sort==='rating') list.sort((a,b)=>b.rating-a.rating);
+ else if(sort==='off') list.sort((a,b)=>(1-b.price/b.mrp)-(1-a.price/a.mrp));
+ return list;
+}
+function cardHTML(p,i){
+ const off=Math.round((1-p.price/p.mrp)*100), out=p.stock<=0, w=wish.includes(p.id);
+ return '<article class="pcard reveal'+(out?' soldout':'')+'" style="--d:'+((i%8)*55)+'ms" data-card="'+p.id+'">'
+  +'<div class="imgwrap">'
+  +'<img src="'+esc(p.img)+'" alt="'+esc(p.name)+'" loading="lazy" onerror="imgFall(this)">'
+  +(p.tag&&!out?'<span class="sticker top-2.5 left-2.5'+(p.tag==='SALE'?' !bg-[#F4581C] !text-white':'')+'">'+esc(p.tag)+'</span>':'')
+  +(out?'<span class="sticker top-2.5 left-2.5 !bg-[#1C1710] !text-[#FAF6EB]">Sold out</span>':'')
+  +'<button class="heart'+(w?' on':'')+'" data-wish="'+p.id+'" aria-label="Wishlist"><svg width="14" height="14" viewBox="0 0 16 16" fill="'+(w?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.8"><path d="M8 14s-5.5-3.4-5.5-7A3.2 3.2 0 0 1 8 4.6 3.2 3.2 0 0 1 13.5 7c0 3.6-5.5 7-5.5 7z"/></svg></button>'
+  +'<button class="qv" data-view="'+p.id+'">Quick view ✳</button>'
+  +'</div>'
+  +'<div class="p-3 sm:p-4 flex flex-col flex-1">'
+  +'<div class="flex justify-between mono text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#6B5D4C] font-semibold"><span>'+esc(p.cat)+'</span><span class="text-[#F4581C]">★ '+Number(p.rating).toFixed(1)+'</span></div>'
+  +'<h3 class="font-disp font-bold text-[0.92rem] sm:text-[1.06rem] leading-snug mt-1.5">'+esc(p.name)+'</h3>'
+  +'<div class="flex items-center justify-between gap-2 mt-auto pt-3">'
+  +'<div class="leading-none"><span class="font-disp font-extrabold text-[1.02rem] sm:text-[1.25rem]">'+fmt(p.price)+'</span>'+(off>0?' <s class="mono text-[10px] opacity-50 hidden sm:inline">'+fmt(p.mrp)+'</s>':'')+'</div>'
+  +'<button class="addbtn" data-add="'+p.id+'"'+(out?' disabled':'')+'>'+(out?'Sold out':'Add +')+'</button>'
+  +'</div></div></article>';
+}
+function renderProducts(){
+ const list=filtered(), grid=$('#grid');
+ grid.innerHTML=list.map(cardHTML).join('');
+ $('#gridEmpty').classList.toggle('hidden',list.length>0);
+ $('#gridCount').textContent=list.length+(list.length===1?' item':' items');
+ bindReveals();
+}
+
+/* ═══════════════ CART ═══════════════ */
+const prod=id=>products.find(p=>p.id===id);
+function cartQty(){ return cart.reduce((a,c)=>a+c.qty,0); }
+function cartSubtotal(){ return cart.reduce((a,c)=>a+(prod(c.id)?prod(c.id).price*c.qty:0),0); }
+function shipFor(sub){ return sub===0||sub>=FREE_SHIP?0:SHIP_FEE; }
+function renderBadge(){
+ const n=cartQty();
+ [['#cartCount'],['#cartCountB']].forEach(([sel])=>{ const el=$(sel); if(el){ el.textContent=n; el.classList.toggle('hidden',n===0); } });
+ const wc=$('#wishCountH'); if(wc){ wc.textContent=wish.length; wc.classList.toggle('hidden',wish.length===0); }
+}
+function addToCart(id,qty,btn){
+ const p=prod(id); if(!p) return;
+ if(p.stock<=0){ toast('Sorry — that one is sold out','red'); return; }
+ const line=cart.find(c=>c.id===id);
+ const cur=line?line.qty:0;
+ if(cur+qty>p.stock){ toast('Only '+p.stock+' left in stock','red'); qty=p.stock-cur; if(qty<=0) return; }
+ if(line) line.qty+=qty; else cart.push({id,qty});
+ save(); renderCart(); renderBadge(); popBadge($('#cartCount')); popBadge($('#cartCountB'));
+ toast(p.name+' added to cart','green');
+ if(btn){ btn.classList.add('done'); btn.textContent='Added ✓'; setTimeout(()=>{ btn.classList.remove('done'); btn.textContent='Add +'; },1300); }
+}
+function renderCart(){
+ const wrap=$('#drawerItems');
+ if(!cart.length){
+  wrap.innerHTML='<div class="text-center py-14"><p class="text-5xl font-disp font-extrabold">✳</p><p class="font-disp font-bold text-xl mt-3">Your cart is dreaming… empty.</p><p class="text-[#6B5D4C] text-sm mt-1">Fill it with something wonderful.</p><button class="btn btn-yellow mt-5" id="btnBrowse">Browse the shelves</button></div>';
+  const b=$('#btnBrowse'); if(b) b.onclick=()=>{ closeDrawer(); goShop(); };
+ }else{
+  wrap.innerHTML=cart.map(c=>{ const p=prod(c.id); if(!p) return '';
+   return '<div class="flex gap-3 border-1.5 border-[#1C1710] rounded-2xl p-2.5 sm:p-3 bg-[#FAF6EB]">'
+   +'<img src="'+esc(p.img)+'" alt="" class="w-[64px] h-[64px] sm:w-[70px] sm:h-[70px] object-cover rounded-xl border-1.5 border-[#1C1710]" onerror="imgFall(this)">'
+   +'<div class="flex-1 min-w-0"><div class="flex justify-between gap-2"><p class="font-disp font-bold leading-tight truncate text-sm sm:text-base">'+esc(p.name)+'</p><button class="mono text-xs font-bold underline underline-offset-2 shrink-0" data-rm="'+c.id+'">remove</button></div>'
+   +'<p class="mono text-[11px] text-[#6B5D4C] mt-0.5">'+fmt(p.price)+' each</p>'
+   +'<div class="flex items-center justify-between mt-2"><div class="stepper"><button data-dec="'+c.id+'" aria-label="Less">−</button><span>'+c.qty+'</span><button data-inc="'+c.id+'" aria-label="More">+</button></div><span class="font-disp font-extrabold text-sm sm:text-base">'+fmt(p.price*c.qty)+'</span></div></div></div>';
+  }).join('');
+ }
+ const sub=cartSubtotal(), ship=shipFor(sub);
+ $('#cartSub').textContent=fmt(sub); $('#cartShip').textContent=ship===0?'FREE':fmt(ship);
+ $('#cartTotal').textContent=fmt(sub+ship);
+ $('#shipBar').style.width=Math.min(100,Math.round(sub/FREE_SHIP*100))+'%';
+ $('#shipMsg').textContent= sub>=FREE_SHIP ? 'FREE SHIPPING UNLOCKED ✳' : fmt(FREE_SHIP-sub)+' away from free shipping';
+ renderBadge();
+}
+function openDrawer(){ renderCart(); $('#drawer').classList.add('open'); $('#backdrop').classList.add('open'); document.body.classList.add('lock'); }
+function closeDrawer(){ $('#drawer').classList.remove('open'); $('#backdrop').classList.remove('open'); if(!$$('.modal.open').length) document.body.classList.remove('lock'); }
+
+/* ═══════════════ MODALS ═══════════════ */
+function openModal(el){ el.classList.add('open'); document.body.classList.add('lock'); }
+function closeModalEl(el){ el.classList.remove('open'); if(!$$('.modal.open').length && !$('#drawer').classList.contains('open')) document.body.classList.remove('lock'); }
+function closeTop(){
+ const m=$$('.modal.open').pop();
+ if(m){ closeModalEl(m); return; }
+ if($('#drawer').classList.contains('open')) closeDrawer();
+}
+$$('.modal').forEach(m=>{ m.addEventListener('click',e=>{ if(e.target.closest('[data-close]')) closeModalEl(m); }); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeTop(); });
+
+/* ═══════════════ WISHLIST ═══════════════ */
+function toggleWish(id){
+ const i=wish.indexOf(id), p=prod(id);
+ if(i>-1){ wish.splice(i,1); toast('Removed from wishlist'); }
+ else{ wish.push(id); toast((p?p.name:'Item')+' saved ♥','green'); }
+ save(); renderBadge(); popBadge($('#wishCountH')); renderProducts();
+}
+
+/* ═══════════════ AUTH ═══════════════ */
+let authMode='login', authSeg='email';
+function openAuth(){
+ authMode='login'; authSeg='email';
+ $('#authErr').classList.add('hidden');
+ $('#authForm').reset();
+ syncAuthUI(); openModal($('#authModal'));
+}
+function syncAuthUI(){
+ $('#tabLogin').classList.toggle('!bg-[#FFD22E]',authMode==='login');
+ $('#tabSignup').classList.toggle('!bg-[#FFD22E]',authMode==='signup');
+ $('#authNameRow').classList.toggle('hidden',authMode==='login');
+ $('#authTitle').textContent=authMode==='login'?'Welcome back':'Join the dream ✳';
+ $('#authSub').textContent=authMode==='login'?'Login to track orders and check out faster.':'A minute of typing, a lifetime of smart shopping.';
+ $('#authSubmit').textContent=authMode==='login'?'Login →':'Create account →';
+ $$('#authSeg button').forEach(b=>b.classList.toggle('on',b.dataset.seg===authSeg));
+ $('#authContactLabel').textContent=authSeg==='email'?'Email address':'Phone number';
+ $('#authContact').placeholder=authSeg==='email'?'you@example.com':'98765 43210';
+ $('#authContact').type=authSeg==='email'?'email':'tel';
+}
+function normContact(raw,seg){
+ let c=raw.trim();
+ if(seg==='phone'){ c=c.replace(/\D/g,''); if(c.length===12&&c.startsWith('91')) c=c.slice(2); if(c.length===11&&c.startsWith('0')) c=c.slice(1); }
+ return c.toLowerCase();
+}
+function validContact(c,seg){ return seg==='email'?/^\S+@\S+\.\S+$/.test(c):/^[6-9]\d{9}$/.test(c); }
+function authErr(msg){ const e=$('#authErr'); e.textContent=msg; e.classList.remove('hidden'); e.classList.remove('shake'); void e.offsetWidth; e.classList.add('shake'); }
+function afterAuth(){
+ renderAccount();
+ closeModalEl($('#authModal'));
+ if(pendingAction){ const f=pendingAction; pendingAction=null; f(); }
+}
+$('#tabLogin').onclick=()=>{ authMode='login'; syncAuthUI(); };
+$('#tabSignup').onclick=()=>{ authMode='signup'; syncAuthUI(); };
+$$('#authSeg button').forEach(b=>b.onclick=()=>{ authSeg=b.dataset.seg; syncAuthUI(); });
+$('#authForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const contact=normContact($('#authContact').value,authSeg), pass=$('#authPass').value;
+ if(!validContact(contact,authSeg)){ authErr(authSeg==='email'?'That email does not look right.':'Enter a valid 10-digit Indian mobile number.'); return; }
+ if(authMode==='signup'){
+  const name=$('#authName').value.trim();
+  if(name.length<2){ authErr('Please tell us your name.'); return; }
+  if(pass.length<6){ authErr('Password needs at least 6 characters.'); return; }
+  if(users.some(u=>u.contact===contact)){ authErr('An account with this '+(authSeg==='email'?'email':'number')+' already exists — try logging in.'); return; }
+  users.push({name,contact,pass,at:Date.now()});
+  session={name,contact,isAdmin:false}; save();
+  toast('Welcome to Dreamcart, '+name.split(' ')[0]+' ✳','green'); afterAuth(); return;
+ }
+ if(contact===ADMIN.email && pass===ADMIN.pass){
+  session={name:ADMIN.name,contact:ADMIN.email,isAdmin:true}; save();
+  toast('Console unlocked. Welcome back, Admin ✳','green');
+  renderAccount(); closeModalEl($('#authModal')); pendingAction=null; showView('admin'); return;
+ }
+ const u=users.find(x=>x.contact===contact);
+ if(!u){ authErr('No account found with these details — create one below?'); authMode='signup'; syncAuthUI(); return; }
+ if(u.pass!==pass){ authErr('Incorrect password — try again.'); return; }
+ session={name:u.name,contact:u.contact,isAdmin:false}; save();
+ toast('Welcome back, '+u.name.split(' ')[0]+' ✳','green'); afterAuth();
+});
+
+/* ═══════════════ ACCOUNT MENU ═══════════════ */
+function renderAccount(){
+ const face=$('#accFace');
+ if(session){ const ini=session.name.trim().charAt(0).toUpperCase(); face.innerHTML='<span class="w-6 h-6 rounded-full bg-[#FFD22E] border-2 border-[#1C1710] grid place-items-center font-disp font-extrabold text-xs">'+esc(ini)+'</span>'; }
+ else{ face.innerHTML='<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="8" cy="5.2" r="3"/><path d="M2.5 14.5c.8-3 3-4.3 5.5-4.3s4.7 1.3 5.5 4.3" stroke-linecap="round"/></svg>'; }
+ const menu=$('#accountMenu');
+ if(!session){ menu.innerHTML='<div class="p-4"><p class="font-disp font-bold">Hey, dreamer ✳</p><p class="text-xs text-[#6B5D4C] mt-1">Login or sign up to buy, track and wishlist.</p><button class="btn btn-yellow btn-sm w-full mt-3" id="menuAuth">Login / Sign up</button></div>'; return; }
+ menu.innerHTML='<div class="px-4 py-3.5 bg-[#FFF0BF] border-b-2 border-[#1C1710]"><p class="font-disp font-bold leading-tight">'+esc(session.name)+'</p><p class="mono text-[10px] tracking-wide text-[#6B5D4C] mt-0.5">'+esc(session.contact)+'</p></div>'
+ +'<button class="w-full text-left px-4 py-3 text-sm font-semibold hover:bg-[#FFF0BF] transition-colors" data-mact="orders">My orders & tracking</button>'
+ +(session.isAdmin?'<button class="w-full text-left px-4 py-3 text-sm font-semibold hover:bg-[#FFF0BF] transition-colors text-[#F4581C]" data-mact="admin">Admin console ✳</button>':'')
+ +'<button class="w-full text-left px-4 py-3 text-sm font-semibold hover:bg-[#FBD9D4] transition-colors border-t-2 border-[#1C1710]" data-mact="logout">Logout</button>';
+}
+$('#btnAccount').onclick=e=>{ e.stopPropagation(); renderAccount(); $('#accountMenu').classList.toggle('open'); };
+document.addEventListener('click',e=>{ if(!e.target.closest('#accWrap') && !e.target.closest('[data-bnav="profile"]')) $('#accountMenu').classList.remove('open'); });
+$('#accountMenu').addEventListener('click',e=>{
+ if(e.target.closest('#menuAuth')){ $('#accountMenu').classList.remove('open'); openAuth(); return; }
+ const b=e.target.closest('[data-mact]'); if(!b) return;
+ $('#accountMenu').classList.remove('open');
+ if(b.dataset.mact==='orders') showView('orders');
+ if(b.dataset.mact==='admin') showView('admin');
+ if(b.dataset.mact==='logout'){ session=null; save(); renderAccount(); showView('shop'); toast('Logged out — see you soon ✳'); }
+});
+
+/* ═══════════════ PRODUCT QUICK-VIEW ═══════════════ */
+function openProduct(id){
+ const p=prod(id); if(!p) return; pmId=id; pmQtyV=1;
+ $('#pmImg').src=p.img; $('#pmImg').alt=p.name;
+ $('#pmCat').textContent=p.cat;
+ $('#pmTag').classList.toggle('hidden',!p.tag); $('#pmTag').textContent=p.tag||'';
+ $('#pmName').textContent=p.name;
+ $('#pmRate').textContent='★ '+Number(p.rating).toFixed(1)+' ('+Number(p.reviews||0).toLocaleString('en-IN')+')';
+ $('#pmPrice').textContent=fmt(p.price); $('#pmMrp').textContent=fmt(p.mrp);
+ const off=Math.round((1-p.price/p.mrp)*100);
+ $('#pmOff').textContent='-'+off+'%'; $('#pmOff').classList.toggle('hidden',off<=0);
+ $('#pmDesc').textContent=p.desc||'A dream worth carting.';
+ $('#pmStock').textContent=p.stock>0?'● IN STOCK — '+p.stock+' LEFT':'● SOLD OUT';
+ $('#pmStock').style.color=p.stock>0?'var(--green)':'var(--red)';
+ $('#pmQty').textContent=pmQtyV;
+ $('#pmAdd').disabled=p.stock<=0; $('#pmBuy').disabled=p.stock<=0;
+ openModal($('#pmModal'));
+}
+$('#pmMinus').onclick=()=>{ pmQtyV=Math.max(1,pmQtyV-1); $('#pmQty').textContent=pmQtyV; };
+$('#pmPlus').onclick=()=>{ const p=prod(pmId); pmQtyV=Math.min(p?p.stock:9,pmQtyV+1); $('#pmQty').textContent=pmQtyV; };
+$('#pmAdd').onclick=()=>{ addToCart(pmId,pmQtyV); closeModalEl($('#pmModal')); openDrawer(); };
+$('#pmBuy').onclick=()=>{ closeModalEl($('#pmModal')); openCheckout([{id:pmId,qty:pmQtyV}]); };
+
+/* ═══════════════ CHECKOUT ═══════════════ */
+function coList(){ return coItems?coItems.slice():cart.map(c=>({id:c.id,qty:c.qty})); }
+function coCalc(){ const items=coList(); const sub=items.reduce((a,l)=>{ const p=prod(l.id); return a+(p?p.price*l.qty:0); },0); return {sub,ship:shipFor(sub),total:sub+shipFor(sub),n:items.reduce((a,l)=>a+l.qty,0)}; }
+function openCheckout(items){
+ if(!items || !items.length){ if(!cart.length){ toast('Your cart is empty — add something first','red'); return; } items=null; }
+ if(!session){ pendingAction=()=>openCheckout(items); toast('Login to continue checkout ✳'); openAuth(); return; }
+ coItems=items; closeDrawer();
+ const saved=LS.get('dc_addr_'+session.contact,null);
+ const phoneFromAccount=/^[6-9]\d{9}$/.test(session.contact||'');
+ if(saved){ $('#coName').value=saved.name||''; $('#coPhone').value=saved.phone||''; $('#coLine').value=saved.line||''; $('#coCity').value=saved.city||''; $('#coState').value=saved.state||''; $('#coPin').value=saved.pin||''; }
+ else{
+  $('#coAddrForm').reset();
+  if(session) $('#coName').value=session.name||'';
+  if(phoneFromAccount) $('#coPhone').value=session.contact; /* auto-fetch phone from account */
+ }
+ $('#coPhoneNote').classList.toggle('hidden',!(phoneFromAccount||saved&&saved.phone));
+ setCoStep(1); selectPay('gpay');
+ openModal($('#coModal'));
+}
+function setCoStep(n){
+ $('#coAddrForm').classList.toggle('hidden',n!==1);
+ $('#coPayStep').classList.toggle('hidden',n!==2);
+ $('#coDoneStep').classList.toggle('hidden',n!==3);
+ [['#coDot1',1],['#coDot2',2],['#coDot3',3]].forEach(([sel,i])=>{ const d=$(sel); d.classList.toggle('on',i===n); d.classList.toggle('pass',i<n); d.textContent=i<n?'✓':i; });
+ $('#coLine1').style.background=n>1?'var(--green)':'rgba(28,23,16,.15)';
+ $('#coLine2').style.background=n>2?'var(--green)':'rgba(28,23,16,.15)';
+}
+$('#coAddrForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const a={ name:$('#coName').value.trim(), phone:$('#coPhone').value.replace(/\D/g,''), line:$('#coLine').value.trim(), city:$('#coCity').value.trim(), state:$('#coState').value.trim(), pin:$('#coPin').value.trim() };
+ if(a.name.length<2) return toast('Please enter the receiver name','red');
+ if(!/^[6-9]\d{9}$/.test(a.phone)) return toast('Enter a valid 10-digit phone','red');
+ if(a.line.length<4) return toast('Address looks too short','red');
+ if(!a.city||!a.state) return toast('City and state are required','red');
+ if(!/^\d{6}$/.test(a.pin)) return toast('PIN code must be 6 digits','red');
+ LS.set('dc_addr_'+session.contact,a);
+ const c=coCalc(); coTotal=c.total;
+ $('#coSumLine').textContent=c.n+(c.n===1?' item':' items')+' · shipping '+(c.ship?fmt(c.ship):'FREE');
+ $('#coPayTotal').textContent=fmt(c.total);
+ $('#btnGpay').textContent='Pay '+fmt(c.total)+' with GPay';
+ $('#btnCardPay').textContent='Pay '+fmt(c.total)+' with card';
+ $('#btnCod').textContent='Place COD order · '+fmt(c.total);
+ setCoStep(2);
+});
+function selectPay(m){
+ coMethod=m;
+ $$('#payOpts .payopt').forEach(b=>b.classList.toggle('on',b.dataset.pay===m));
+ $('#panelGpay').classList.toggle('hidden',m!=='gpay');
+ $('#panelCard').classList.toggle('hidden',m!=='card');
+ $('#panelCod').classList.toggle('hidden',m!=='cod');
+}
+$('#payOpts').addEventListener('click',e=>{ const b=e.target.closest('[data-pay]'); if(b) selectPay(b.dataset.pay); });
+$('#coBackAddr').onclick=()=>setCoStep(1);
+$('#cardNum').addEventListener('input',e=>{ let v=e.target.value.replace(/\D/g,'').slice(0,16); e.target.value=v.replace(/(.{4})/g,'$1 ').trim(); $('#cpNum').textContent=(e.target.value||'•••• •••• •••• ••••').padEnd(19,'•'); });
+$('#cardName').addEventListener('input',e=>{ $('#cpName').textContent=(e.target.value.toUpperCase()||'YOUR NAME').slice(0,22); });
+$('#cardExp').addEventListener('input',e=>{ let v=e.target.value.replace(/\D/g,'').slice(0,4); if(v.length>2) v=v.slice(0,2)+'/'+v.slice(2); e.target.value=v; $('#cpExp').textContent=v||'MM/YY'; });
+function processPay(){
+ const lbl={ gpay:'Opening GPay…', card:'Contacting your bank…', cod:'Placing your order…' }[coMethod];
+ $('#coProcLabel').textContent=lbl.toUpperCase();
+ const ov=$('#coProc'); ov.classList.remove('hidden'); ov.style.display='flex';
+ setTimeout(()=>{ ov.style.display='none'; ov.classList.add('hidden'); finishOrder(coMethod); },1500);
+}
+$('#btnGpay').onclick=()=>{ const upi=$('#coUpi').value.trim(); if(!/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(upi)){ $('#coUpi').classList.add('shake'); setTimeout(()=>$('#coUpi').classList.remove('shake'),450); return toast('Enter a valid UPI ID (name@bank)','red'); } processPay(); };
+$('#btnCardPay').onclick=()=>{
+ const num=$('#cardNum').value.replace(/\D/g,''), nm=$('#cardName').value.trim(), exp=$('#cardExp').value, cvv=$('#cardCvv').value;
+ if(num.length!==16) return toast('Card number must be 16 digits','red');
+ if(nm.length<3) return toast('Enter the name on the card','red');
+ if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)) return toast('Expiry must be MM/YY','red');
+ if(!/^\d{3,4}$/.test(cvv)) return toast('CVV must be 3–4 digits','red');
+ processPay();
+};
+$('#btnCod').onclick=()=>processPay();
+function finishOrder(method){
+ const items=coList().map(l=>{ const p=prod(l.id); return {id:l.id,name:p?p.name:'Item',price:p?p.price:0,qty:l.qty,img:p?p.img:FALL}; });
+ const c=coCalc();
+ const addr={ name:$('#coName').value.trim(), phone:$('#coPhone').value.trim(), line:$('#coLine').value.trim(), city:$('#coCity').value.trim(), state:$('#coState').value.trim(), pin:$('#coPin').value.trim() };
+ const order={ id:ordId(), items, sub:c.sub, ship:c.ship, total:c.total, method, contact:session.contact, addr, status:'placed', at:Date.now(), history:[{status:'placed',at:Date.now()}] };
+ items.forEach(l=>{ const p=prod(l.id); if(p) p.stock=Math.max(0,p.stock-l.qty); });
+ if(coItems){ const ids=coItems.map(l=>l.id); cart=cart.filter(c=>!ids.includes(c.id)); }
+ else cart=[];
+ orders.unshift(order); save();
+ coItems=null; renderCart(); renderProducts();
+ $('#doneOrderId').textContent=order.id;
+ setCoStep(3); confetti(); toast('Order '+order.id+' placed ✳','green');
+}
+$('#btnTrack').onclick=()=>{ closeModalEl($('#coModal')); showView('orders'); };
+$('#btnCont').onclick=()=>{ closeModalEl($('#coModal')); goShop(); };
+
+/* ═══════════════ ORDERS (USER TRACKING) ═══════════════ */
+const STEPS=['placed','confirmed','shipped','delivered'];
+function timelineHTML(o){
+ if(o.status==='cancelled'){
+  const at=(o.history.find(h=>h.status==='cancelled')||{}).at||o.at;
+  return '<div class="flex items-center gap-3 border-1.5 border-[#E23D2E] bg-[#FBD9D4] rounded-2xl px-4 py-3"><span class="tl-dot tl-cancel shrink-0">✕</span><div><p class="font-bold text-sm text-[#E23D2E]">Order cancelled</p><p class="mono text-[10px] text-[#6B5D4C]">'+timeStr(at)+'</p></div></div>';
+ }
+ const idx=STEPS.indexOf(o.status);
+ return '<div class="tl">'+STEPS.map((s,i)=>{
+  const h=o.history.find(x=>x.status===s);
+  const cls=i<idx?'done':i===idx?'cur':'';
+  return '<div class="tl-step '+cls+'"><span class="tl-dot">'+(i<idx?'✓':i+1)+'</span><p class="mono text-[9.5px] sm:text-[10px] tracking-[0.1em] font-semibold mt-1.5 uppercase">'+LABEL[s]+'</p><p class="mono text-[8.5px] sm:text-[9px] text-[#6B5D4C] mt-0.5">'+(h?timeStr(h.at):'—')+'</p></div>';
+ }).join('')+'</div>';
+}
+function renderOrders(){
+ const wrap=$('#ordersWrap'), auth=$('#ordersAuth');
+ if(!session){ wrap.innerHTML=''; auth.classList.remove('hidden'); $('#ordersGreet').textContent='Your Orders'; return; }
+ auth.classList.add('hidden');
+ $('#ordersGreet').textContent=session.name.split(' ')[0]+', your orders';
+ const mine=orders.filter(o=>o.contact===session.contact).sort((a,b)=>b.at-a.at);
+ if(!mine.length){ wrap.innerHTML='<div class="border-2 border-dashed border-[#1C1710] rounded-[24px] py-14 text-center"><p class="text-5xl font-disp font-extrabold">✳</p><p class="font-disp font-bold text-2xl mt-3">No orders yet.</p><p class="text-[#6B5D4C] mt-1 text-sm sm:text-base">Your future parcels will show up here, fully trackable.</p><button class="btn btn-yellow mt-6" onclick="goShop()">Start shopping</button></div>'; return; }
+ wrap.innerHTML=mine.map(o=>{
+  const itemCount=o.items.reduce((a,i)=>a+i.qty,0);
+  return '<div class="border-2 border-[#1C1710] rounded-[24px] bg-[#FFFCF2] shadow-hard overflow-hidden">'
+  +'<div class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-4 border-b-2 border-[#1C1710] bg-[#FFF0BF]">'
+   +'<div><p class="mono text-xs font-semibold">'+esc(o.id)+'</p><p class="mono text-[10px] text-[#6B5D4C] mt-0.5">'+dateStr(o.at)+' · '+PAYLABEL[o.method]+'</p></div>'
+   +'<div class="flex items-center gap-3"><span class="st st-'+o.status+'">'+LABEL[o.status]+'</span><span class="font-disp font-extrabold text-lg">'+fmt(o.total)+'</span></div>'
+  +'</div>'
+  +'<div class="px-4 sm:px-5 py-4">'
+   +'<div class="flex flex-wrap gap-2.5 mb-5">'+o.items.map(i=>'<div class="flex items-center gap-2.5 border-1.5 border-[#1C1710] rounded-xl pr-3 bg-[#FAF6EB]"><img src="'+esc(i.img)+'" class="w-11 h-11 object-cover rounded-l-[10px] border-r-1.5 border-[#1C1710]" onerror="imgFall(this)"><div><p class="text-xs font-bold leading-tight max-w-[130px] sm:max-w-[160px] truncate">'+esc(i.name)+'</p><p class="mono text-[10px] text-[#6B5D4C]">×'+i.qty+' · '+fmt(i.price*i.qty)+'</p></div></div>').join('')+'</div>'
+   +timelineHTML(o)
+   +'<div class="flex flex-wrap justify-between items-center gap-2 mt-5 pt-4 border-t-2 border-dashed border-[#1C1710]">'
+    +'<p class="text-xs text-[#6B5D4C]"><b class="text-[#1C1710]">Deliver to:</b> '+esc(o.addr.name)+', '+esc(o.addr.line)+', '+esc(o.addr.city)+' — '+esc(o.addr.pin)+'</p>'
+    +(o.status==='placed'?'<button class="btn btn-sm !bg-[#FBD9D4]" data-cancel="'+o.id+'">Cancel order</button>':'<span class="mono text-[10px] tracking-widest text-[#6B5D4C]">'+itemCount+' ITEM'+(itemCount>1?'S':'')+'</span>')
+   +'</div>'
+  +'</div></div>';
+ }).join('');
+}
+$('#ordersWrap').addEventListener('click',e=>{
+ const b=e.target.closest('[data-cancel]'); if(!b) return;
+ const o=orders.find(x=>x.id===b.dataset.cancel);
+ if(o && o.status==='placed'){
+  o.status='cancelled'; o.history.push({status:'cancelled',at:Date.now()});
+  o.items.forEach(l=>{ const p=prod(l.id); if(p) p.stock+=l.qty; });
+  save(); renderOrders(); renderProducts(); toast('Order '+o.id+' cancelled — stock restored','red');
+ }
+});
+$('#btnOrdersLogin').onclick=()=>{ pendingAction=()=>showView('orders'); openAuth(); };
+
+/* ═══════════════ ADMIN ═══════════════ */
+function renderAdmin(){
+ const live=orders.filter(o=>o.status!=='cancelled');
+ $('#stRevenue').textContent=fmt(live.reduce((a,o)=>a+o.total,0));
+ $('#stOrders').textContent=orders.length;
+ $('#stPending').textContent=orders.filter(o=>o.status==='placed'||o.status==='confirmed').length;
+ $('#stProducts').textContent=products.length;
+ $('#stCustomers').textContent=users.length;
+ $('#prodTotal').textContent='('+products.length+')';
+ $('#admRecent').innerHTML=([ ...orders ].sort((a,b)=>b.at-a.at).slice(0,6).map(o=>'<tr><td class="mono text-xs font-semibold">'+esc(o.id)+'</td><td>'+esc(o.addr.name)+'</td><td>'+fmt(o.total)+'</td><td><span class="st st-'+o.status+'">'+LABEL[o.status]+'</span></td></tr>').join(''))||'<tr><td colspan="4" class="text-[#6B5D4C] py-5 text-center">No orders yet — they will appear here in real time.</td></tr>';
+ const low=products.filter(p=>p.stock<=8).sort((a,b)=>a.stock-b.stock);
+ $('#admLow').innerHTML=low.length?low.map(p=>'<div class="flex items-center justify-between gap-2 border-1.5 border-[#1C1710] rounded-xl px-3 py-2.5 mb-2.5 bg-[#FAF6EB]"><div class="min-w-0"><p class="text-sm font-bold truncate">'+esc(p.name)+'</p><p class="mono text-[10px] '+(p.stock<=3?'text-[#E23D2E]':'text-[#6B5D4C]')+' font-semibold">'+p.stock+' LEFT'+(p.stock===0?' — SOLD OUT':'')+'</p></div><button class="btn btn-yellow btn-sm shrink-0" data-restock="'+p.id+'">+10</button></div>').join(''):'<p class="text-sm text-[#6B5D4C] px-2 py-3">Everything is well stocked ✳</p>';
+ $('#prodTable').innerHTML=products.map(p=>'<tr>'
+  +'<td><div class="flex items-center gap-3"><img src="'+esc(p.img)+'" class="w-11 h-11 object-cover rounded-lg border-1.5 border-[#1C1710]" onerror="imgFall(this)"><div><p class="font-bold leading-tight">'+esc(p.name)+'</p><p class="mono text-[10px] text-[#6B5D4C]">'+esc(p.id)+'</p></div></div></td>'
+  +'<td><span class="chip !cursor-default !text-[10px] !px-2.5">'+esc(p.cat)+'</span></td>'
+  +'<td class="mono text-xs"><b>'+fmt(p.price)+'</b> <s class="opacity-50">'+fmt(p.mrp)+'</s></td>'
+  +'<td class="mono text-xs font-semibold '+(p.stock<=3?'text-[#E23D2E]':'')+'">'+p.stock+'</td>'
+  +'<td>'+(p.tag?'<span class="st st-placed">'+esc(p.tag)+'</span>':'<span class="text-[#6B5D4C] text-xs">—</span>')+'</td>'
+  +'<td class="text-right whitespace-nowrap"><button class="btn btn-sm mr-1.5" data-pedit="'+p.id+'">Edit</button><button class="btn btn-sm !bg-[#FBD9D4]" data-pdel="'+p.id+'">Delete</button></td>'
+  +'</tr>').join('');
+ $('#orderTable').innerHTML=orders.map(o=>{
+  const n=o.items.reduce((a,i)=>a+i.qty,0);
+  return '<tr class="cursor-pointer" data-otoggle="'+o.id+'">'
+  +'<td class="mono text-xs font-semibold">'+esc(o.id)+'<p class="mono text-[9px] text-[#6B5D4C] font-medium">'+dateStr(o.at)+'</p></td>'
+  +'<td><p class="font-bold text-sm">'+esc(o.addr.name)+'</p><p class="mono text-[10px] text-[#6B5D4C]">'+esc(o.contact)+'</p></td>'
+  +'<td class="mono text-xs">'+n+'</td>'
+  +'<td class="mono text-xs font-semibold">'+fmt(o.total)+'</td>'
+  +'<td><span class="chip !cursor-default !text-[10px] !px-2.5">'+PAYLABEL[o.method]+'</span></td>'
+  +'<td><select class="inp !w-auto !py-1.5 !text-xs mono cursor-pointer" data-ostatus="'+o.id+'">'+['placed','confirmed','shipped','delivered','cancelled'].map(s=>'<option value="'+s+'"'+(s===o.status?' selected':'')+'>'+LABEL[s]+'</option>').join('')+'</select></td>'
+  +'<td class="text-right whitespace-nowrap">'
+   +(NEXT[o.status]?'<button class="btn btn-yellow btn-sm mr-1.5" data-advance="'+o.id+'">'+NEXTBTN[o.status]+'</button>':'')
+   +(o.status!=='cancelled'&&o.status!=='delivered'?'<button class="btn btn-sm !bg-[#FBD9D4]" data-admcancel="'+o.id+'">Cancel</button>':'')
+  +'</td></tr>'
+  +'<tr id="det-'+o.id+'" class="hidden"><td colspan="7" class="bg-[#FAF6EB] !py-5"><div class="grid lg:grid-cols-2 gap-6">'
+   +'<div><p class="mono text-[10px] tracking-[0.16em] font-semibold text-[#6B5D4C] mb-2">ITEMS</p>'+o.items.map(i=>'<div class="flex justify-between text-sm border-b border-dashed border-[#1C1710]/30 py-1.5"><span>'+esc(i.name)+' ×'+i.qty+'</span><span class="mono text-xs">'+fmt(i.price*i.qty)+'</span></div>').join('')+'<p class="mono text-[10px] tracking-[0.16em] font-semibold text-[#6B5D4C] mt-4 mb-1">SHIP TO</p><p class="text-sm">'+esc(o.addr.name)+' · '+esc(o.addr.phone)+'<br>'+esc(o.addr.line)+', '+esc(o.addr.city)+', '+esc(o.addr.state)+' — '+esc(o.addr.pin)+'</p></div>'
+   +'<div><p class="mono text-[10px] tracking-[0.16em] font-semibold text-[#6B5D4C] mb-3">TRACKING</p>'+timelineHTML(o)+'</div>'
+  +'</div></td></tr>';
+ }).join('')||'<tr><td colspan="7" class="text-[#6B5D4C] py-6 text-center">No orders yet — they will appear here as customers buy.</td></tr>';
+ $('#custTable').innerHTML=users.map(u=>{
+  const uo=orders.filter(o=>o.contact===u.contact&&o.status!=='cancelled');
+  return '<tr><td class="font-bold">'+esc(u.name)+'</td><td class="mono text-xs">'+esc(u.contact)+'</td><td class="mono text-xs">'+dateStr(u.at)+'</td><td class="mono text-xs">'+uo.length+'</td><td class="mono text-xs font-semibold">'+fmt(uo.reduce((a,o)=>a+o.total,0))+'</td></tr>';
+ }).join('')||'<tr><td colspan="5" class="text-[#6B5D4C] py-6 text-center">No customers registered yet.</td></tr>';
+}
+$('#admTabs').addEventListener('click',e=>{
+ const b=e.target.closest('[data-admtab]'); if(!b) return;
+ $$('#admTabs .chip').forEach(c=>c.classList.remove('on')); b.classList.add('on');
+ ['overview','products','orders','customers'].forEach(t=>$('#adm-'+t).classList.toggle('hidden',t!==b.dataset.admtab));
+});
+$('#btnAdminShop').onclick=()=>showView('shop');
+$('#btnAdminLogout').onclick=()=>{ session=null; save(); renderAccount(); showView('shop'); toast('Admin logged out ✳'); };
+function openProdForm(id){
+ const p=id?prod(id):null;
+ $('#pfTitle').textContent=p?'Edit product ✳':'Add product ✳';
+ $('#pfId').value=p?p.id:''; $('#pfName').value=p?p.name:''; $('#pfCat').value=p?p.cat:'';
+ $('#pfPrice').value=p?p.price:''; $('#pfMrp').value=p?p.mrp:''; $('#pfStock').value=p?p.stock:20;
+ $('#pfTag').value=p?(p.tag||''):''; $('#pfRating').value=p?p.rating:4.5; $('#pfDesc').value=p?(p.desc||''):'';
+ $('#pfImg').value=p?p.img:''; $('#pfPrev').src=p?p.img:FALL;
+ openModal($('#prodFormModal'));
+}
+$('#btnAddProd').onclick=()=>openProdForm(null);
+$('#pfImg').addEventListener('input',e=>{ $('#pfPrev').src=e.target.value.trim()||FALL; });
+$('#prodForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const id=$('#pfId').value;
+ const name=$('#pfName').value.trim();
+ const price=Math.max(1,parseInt($('#pfPrice').value)||0);
+ let mrp=parseInt($('#pfMrp').value)||price; if(mrp<price) mrp=price;
+ const data={
+  name, cat:$('#pfCat').value.trim()||'General', price, mrp,
+  stock:Math.max(0,parseInt($('#pfStock').value)||0),
+  tag:$('#pfTag').value, rating:Math.min(5,Math.max(0,parseFloat($('#pfRating').value)||4.5)),
+  desc:$('#pfDesc').value.trim(), img:$('#pfImg').value.trim()||FALL,
+  reviews:id?(prod(id)||{}).reviews||0:0
+ };
+ if(!name) return toast('Product needs a name','red');
+ if(id){ Object.assign(prod(id),data); toast(name+' updated ✳','green'); }
+ else{ data.id='p'+Date.now(); products.unshift(data); toast(name+' added to the shelves ✳','green'); }
+ save(); closeModalEl($('#prodFormModal')); renderAdmin(); renderChips(); renderProducts();
+});
+$('#admLow').addEventListener('click',e=>{
+ const b=e.target.closest('[data-restock]'); if(!b) return;
+ const p=prod(b.dataset.restock); if(p){ p.stock+=10; save(); renderAdmin(); renderProducts(); toast(p.name+' restocked (+10)','green'); }
+});
+$('#prodTable').addEventListener('click',e=>{
+ const ed=e.target.closest('[data-pedit]'); if(ed){ openProdForm(ed.dataset.pedit); return; }
+ const del=e.target.closest('[data-pdel]'); if(!del) return;
+ if(del.classList.contains('arm')){
+  const p=prod(del.dataset.pdel);
+  products=products.filter(x=>x.id!==del.dataset.pdel);
+  cart=cart.filter(c=>prod(c.id)); save();
+  renderAdmin(); renderChips(); renderProducts(); renderCart();
+  toast((p?p.name:'Product')+' deleted','red');
+ }else{
+  del.classList.add('arm'); del.textContent='Sure?';
+  setTimeout(()=>{ del.classList.remove('arm'); del.textContent='Delete'; },2600);
+ }
+});
+$('#orderTable').addEventListener('click',e=>{
+ const adv=e.target.closest('[data-advance]');
+ if(adv){ const o=orders.find(x=>x.id===adv.dataset.advance); if(o&&NEXT[o.status]){ setOrderStatus(o.id,NEXT[o.status]); } return; }
+ const can=e.target.closest('[data-admcancel]');
+ if(can){ const o=orders.find(x=>x.id===can.dataset.admcancel); if(o){ setOrderStatus(o.id,'cancelled',true); } return; }
+ if(e.target.closest('select,button')) return;
+ const tog=e.target.closest('[data-otoggle]');
+ if(tog){ const row=$('#det-'+tog.dataset.otoggle); if(row) row.classList.toggle('hidden'); }
+});
+$('#orderTable').addEventListener('change',e=>{
+ const sel=e.target.closest('[data-ostatus]'); if(!sel) return;
+ setOrderStatus(sel.dataset.ostatus,sel.value);
+});
+function setOrderStatus(id,status,restock){
+ const o=orders.find(x=>x.id===id); if(!o||o.status===status) return;
+ if((status==='cancelled'||restock)&&o.status!=='cancelled'){ o.items.forEach(l=>{ const p=prod(l.id); if(p) p.stock+=l.qty; }); }
+ if(o.status==='cancelled'&&status!=='cancelled'){ o.items.forEach(l=>{ const p=prod(l.id); if(p) p.stock=Math.max(0,p.stock-l.qty); }); }
+ o.status=status;
+ o.history=o.history.filter(h=>STEPS.indexOf(h.status)<STEPS.indexOf(status)||status==='cancelled');
+ if(!o.history.some(h=>h.status===status)) o.history.push({status,at:Date.now()});
+ save(); renderAdmin(); renderProducts();
+ toast(id+' → '+LABEL[status]+(status==='cancelled'?' (stock restored)':' ✳'), status==='cancelled'?'red':'green');
+}
+
+/* ═══════════════ NAVIGATION & GLOBAL EVENTS ═══════════════ */
+function goCats(){ curCat='all'; renderChips(); renderProducts(); $('#prodSec').scrollIntoView({behavior:'smooth'}); }
+function goSale(){ curCat='sale'; renderChips(); renderProducts(); $('#prodSec').scrollIntoView({behavior:'smooth'}); }
+function setChip(v){ curCat=v; query=''; $('#heroSearch').value=''; renderChips(); renderProducts(); }
+document.addEventListener('click',e=>{
+ const chip=e.target.closest('[data-chip]');
+ if(chip){ e.preventDefault(); if($('#view-shop').classList.contains('hidden')) showView('shop'); setChip(chip.dataset.chip); $('#prodSec').scrollIntoView({behavior:'smooth'}); return; }
+ const nav=e.target.closest('[data-nav]');
+ if(nav){ e.preventDefault(); const v=nav.dataset.nav;
+  if(v==='shop'){ showView('shop'); }
+  else if(v==='sale'){ showView('shop'); setTimeout(goSale,80); }
+  else if(v==='cats'){ showView('shop'); setTimeout(goCats,80); }
+  else if(v==='track'){ if(session) showView('orders'); else { pendingAction=()=>showView('orders'); openAuth(); } }
+  return; }
+ const fake=e.target.closest('[data-fake]');
+ if(fake){ e.preventDefault(); toast(fake.dataset.fake); }
+});
+$('#logoHome').onclick=e=>{ e.preventDefault(); showView('shop'); };
+$('#btnSearch').onclick=()=>{ showView('shop'); setTimeout(()=>{ $('#heroSearch').focus(); $('#prodSec').scrollIntoView({behavior:'smooth'}); },100); };
+$('#btnWishHead').onclick=()=>{ showView('shop'); setChip('wish'); setTimeout(()=>$('#prodSec').scrollIntoView({behavior:'smooth'}),80); };
+$('#btnCart').onclick=openDrawer;
+$('#drawerClose').onclick=closeDrawer;
+$('#backdrop').onclick=closeDrawer;
+$('#btnCheckout').onclick=()=>openCheckout(null);
+$('#btnSaleCta').onclick=goSale;
+$('#btnClearFilters').onclick=()=>{ curCat='all'; query=''; $('#heroSearch').value=''; renderChips(); renderProducts(); };
+$('#heroSearch').addEventListener('input',e=>{ query=e.target.value.trim(); renderProducts(); });
+$('#heroForm').addEventListener('submit',e=>{ e.preventDefault(); $('#prodSec').scrollIntoView({behavior:'smooth'}); });
+$('#chipsWrap').addEventListener('click',e=>{ const c=e.target.closest('[data-chip]'); if(c){ curCat=c.dataset.chip; renderChips(); renderProducts(); } });
+$('#heroChips').addEventListener('click',e=>{ const c=e.target.closest('[data-chip]'); if(c){ curCat=c.dataset.chip; renderChips(); renderProducts(); $('#prodSec').scrollIntoView({behavior:'smooth'}); } });
+$('#sortSel').addEventListener('change',e=>{ sort=e.target.value; renderProducts(); });
+$('#grid').addEventListener('click',e=>{
+ const add=e.target.closest('[data-add]'); if(add){ addToCart(add.dataset.add,1,add); return; }
+ const w=e.target.closest('[data-wish]'); if(w){ toggleWish(w.dataset.wish); return; }
+ const v=e.target.closest('[data-view]'); if(v){ openProduct(v.dataset.view); return; }
+ const card=e.target.closest('[data-card]'); if(card){ openProduct(card.dataset.card); }
+});
+$('#drawerItems').addEventListener('click',e=>{
+ const inc=e.target.closest('[data-inc]'); const dec=e.target.closest('[data-dec]'); const rm=e.target.closest('[data-rm]');
+ if(inc){ const l=cart.find(c=>c.id===inc.dataset.inc); const p=l&&prod(l.id); if(l&&p&&l.qty<p.stock){ l.qty++; save(); renderCart(); } else toast('No more stock available','red'); }
+ if(dec){ const l=cart.find(c=>c.id===dec.dataset.dec); if(l){ l.qty--; if(l.qty<=0) cart=cart.filter(c=>c!==l); save(); renderCart(); } }
+ if(rm){ cart=cart.filter(c=>c.id!==rm.dataset.rm); save(); renderCart(); toast('Removed from cart'); }
+});
+$('#nlForm').addEventListener('submit',e=>{ e.preventDefault(); toast('You are on the Dream List ✳ Welcome!','green'); e.target.reset(); });
+window.addEventListener('scroll',()=>{ $('#header').classList.toggle('scrolled',window.scrollY>12); },{passive:true});
+
+/* ═══════════════ INIT ═══════════════ */
+$('#yr').textContent=new Date().getFullYear();
+renderChips(); renderProducts(); renderCart(); renderBadge(); renderAccount(); bindReveals();
+</script>
+</body>
+</html>
